@@ -1,4 +1,4 @@
-namespace _23Z_NTR_Jakomulski_Michal.Models
+namespace ClinicApp.Models
 {
     public class ErrorViewModel
     {

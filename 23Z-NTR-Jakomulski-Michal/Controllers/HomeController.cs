@@ -1,8 +1,8 @@
-﻿using _23Z_NTR_Jakomulski_Michal.Models;
+﻿using ClinicApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace _23Z_NTR_Jakomulski_Michal.Controllers
+namespace ClinicApp.Controllers
 {
     public class HomeController : Controller
     {
