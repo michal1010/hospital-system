@@ -23,6 +23,7 @@ public static class SeedData
                 new Doctor
                 {
                     Name = "Jan",
+                    Surname = "Kowalski",
                     Sepcialization = "dermatolog",
                     Login = "jan",
                     Password = "Password",
@@ -32,6 +33,7 @@ public static class SeedData
                 new Doctor
                 {
                     Name = "Olga",
+                    Surname = "Nowak",
                     Sepcialization = "dermatolog",
                     Login = "olg",
                     Password = "Password",
@@ -40,6 +42,7 @@ public static class SeedData
                 new Doctor
                 {
                     Name = "Grzegorz",
+                    Surname = "Braun",
                     Sepcialization = "dermatolog",
                     Login = "grz",
                     Password = "Password",
@@ -48,6 +51,7 @@ public static class SeedData
                 new Doctor
                 {
                     Name = "Juan",
+                    Surname = "Świt",
                     Sepcialization = "dermatolog",
                     Login = "hłan",
                     Password = "Password",

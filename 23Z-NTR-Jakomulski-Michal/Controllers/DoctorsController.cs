@@ -88,7 +88,7 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Sepcialization,Login,Password,JoinDate")] Doctor doctor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Sepcialization,Login,Password,JoinDate")] Doctor doctor)
         {
             if (id != doctor.Id)
             {
