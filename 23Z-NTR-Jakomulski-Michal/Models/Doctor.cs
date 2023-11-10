@@ -11,6 +11,7 @@ namespace ClinicApp.Models
         public string Login{ get; set; }
         public string Password { get; set; }
 
+        [Display(Name = "Join date")]
         [DataType(DataType.Date)]
         public DateTime JoinDate { get; set; }
 
