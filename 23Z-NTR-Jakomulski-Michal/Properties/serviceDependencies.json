@@ -2,7 +2,7 @@
   "dependencies": {
     "mssql1": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:_23Z_NTR_Jakomulski_MichalContext"
+      "connectionId": "ConnectionStrings:ClinicAppContext"
     }
   }
 }

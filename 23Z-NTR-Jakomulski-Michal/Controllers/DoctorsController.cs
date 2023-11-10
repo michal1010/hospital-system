@@ -24,7 +24,7 @@ namespace ClinicApp.Controllers
         {
             return _context.Doctor != null ?
                         View(await _context.Doctor.ToListAsync()) :
-                        Problem("Entity set '_23Z_NTR_Jakomulski_MichalContext.Doctor'  is null.");
+                        Problem("Entity set 'ClinicAppContext.Doctor'  is null.");
         }
 
         // GET: Doctors/Details/5
@@ -143,7 +143,7 @@ namespace ClinicApp.Controllers
         {
             if (_context.Doctor == null)
             {
-                return Problem("Entity set '_23Z_NTR_Jakomulski_MichalContext.Doctor'  is null.");
+                return Problem("Entity set 'ClinicAppContext.Doctor'  is null.");
             }
             var doctor = await _context.Doctor.FindAsync(id);
             if (doctor != null)
