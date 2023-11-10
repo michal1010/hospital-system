@@ -10,11 +10,11 @@ using ClinicApp.Data;
 
 namespace ClinicApp.Controllers
 {
-    public class DoctorsController : Controller
+    public class DirectorController : Controller
     {
         private readonly ClinicAppContext _context;
 
-        public DoctorsController(ClinicAppContext context)
+        public DirectorController(ClinicAppContext context)
         {
             _context = context;
         }
