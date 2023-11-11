@@ -88,7 +88,7 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Sepcialization,Login,Password,JoinDate")] Doctor doctor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Sepcialization,Login,Password")] Doctor doctor)
         {
             if (id != doctor.Id)
             {
@@ -153,6 +153,26 @@ namespace ClinicApp.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+
+        public async Task<IActionResult> Login(string login, string password)
+        {
+            Doctor? doc = await _context.Doctor.Where(d => d.Login == login)
+                                               .FirstOrDefaultAsync();
+
+            if (ModelState.IsValid)
+            {
+                if (doc == null || doc.Password != password)
+                {
+                    ModelState.AddModelError("Password", "Invalid username or password");
+                }
+                else
+                {
+                    return RedirectToAction("Index", "Doctors");
+                }
+            }
+            return View();
         }
 
         private bool DoctorExists(int id)
