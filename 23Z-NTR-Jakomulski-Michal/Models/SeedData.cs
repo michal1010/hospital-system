@@ -15,11 +15,9 @@ public static class SeedData
                 DbContextOptions<ClinicAppContext>>()))
         {
             // Look for any Doctors.
-            if (context.Doctor.Any())
+            if (!context.Doctor.Any())
             {
-                return;   // DB has been seeded
-            }
-            context.Doctor.AddRange(
+                context.Doctor.AddRange(
                 new Doctor
                 {
                     Name = "Jan",
@@ -58,6 +56,40 @@ public static class SeedData
                     JoinDate = DateTime.Now,
                 }
             );
+            }
+            else if( !context.Patient.Any())
+            {
+                context.Patient.AddRange(
+                new Patient
+                {
+                    Name = "Jan",
+                    Surname = "Słoń",
+                    Login = "jan",
+                    Password = "Password",
+                    IsAccountActive = true,
+
+                },
+                new Patient
+                {
+                    Name = "Olga",
+                    Surname = "Rachoń",
+                    Login = "olg",
+                    Password = "Password",
+                    IsAccountActive = true
+                },
+                new Patient
+                {
+                    Name = "Grzegorz",
+                    Surname = "Turkacz",
+                    Login = "grz",
+                    Password = "Password",
+                    IsAccountActive = false
+                }
+                );
+            }
+            else { return; }
+           
+            
             
             context.SaveChanges();
         }
