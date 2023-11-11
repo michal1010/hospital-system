@@ -22,38 +22,38 @@ public static class SeedData
                 {
                     Name = "Jan",
                     Surname = "Kowalski",
-                    Sepcialization = "dermatolog",
+                    Sepcialization = Doctor.Sepecializations.Oncology,
                     Login = "jan",
                     Password = "Password",
-                    JoinDate = DateTime.Now,
+                   
 
                 },
                 new Doctor
                 {
                     Name = "Olga",
                     Surname = "Nowak",
-                    Sepcialization = "dermatolog",
+                    Sepcialization = Doctor.Sepecializations.Dermatology,
                     Login = "olg",
                     Password = "Password",
-                    JoinDate = DateTime.Now,
+
                 },
                 new Doctor
                 {
                     Name = "Grzegorz",
                     Surname = "Braun",
-                    Sepcialization = "dermatolog",
+                    Sepcialization = Doctor.Sepecializations.Internal,
                     Login = "grz",
                     Password = "Password",
-                    JoinDate = DateTime.Now,
+
                 },
                 new Doctor
                 {
                     Name = "Juan",
                     Surname = "Świt",
-                    Sepcialization = "dermatolog",
+                    Sepcialization = Doctor.Sepecializations.Dermatology,
                     Login = "hłan",
                     Password = "Password",
-                    JoinDate = DateTime.Now,
+     
                 }
             );
             }
