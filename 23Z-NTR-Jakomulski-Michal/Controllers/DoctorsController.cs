@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ClinicApp.Models;
 using ClinicApp.Data;
+using HelperClasses;
 
 namespace ClinicApp.Controllers
 {
@@ -60,6 +61,7 @@ namespace ClinicApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                ViewBag.SpecializationsOptions = new SelectList(EnumHelper.GetItemsFromEnum<Doctor.Sepecializations>(), "Value", "Text");
                 _context.Add(doctor);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
