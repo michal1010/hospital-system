@@ -1,11 +1,14 @@
 using ClinicApp.Data;
 using ClinicApp.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ClinicAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ClinicAppContext") ?? 
                         throw new InvalidOperationException("Connection string 'ClinicAppContext' not found.")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ClinicAppContext>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -37,5 +40,5 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
+app.MapRazorPages();
 app.Run();

@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ClinicApp.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ClinicApp.Data
 {
-    public class ClinicAppContext : DbContext
+    public class ClinicAppContext : IdentityDbContext
     {
         public ClinicAppContext (DbContextOptions<ClinicAppContext> options)
             : base(options)
