@@ -36,7 +36,7 @@ namespace ClinicApp.Controllers
             }
 
             var patient = await _context.Patient
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id.ToString());
             if (patient == null)
             {
                 return NotFound();
@@ -90,7 +90,7 @@ namespace ClinicApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Login,Password,IsAccountActive")] Patient patient)
         {
-            if (id != patient.Id)
+            if (id.ToString() != patient.Id)
             {
                 return NotFound();
             }
@@ -104,7 +104,7 @@ namespace ClinicApp.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PatientExists(patient.Id))
+                    if (!PatientExists(patient.Id.))
                     {
                         return NotFound();
                     }
@@ -127,7 +127,7 @@ namespace ClinicApp.Controllers
             }
 
             var patient = await _context.Patient
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id.ToString());
             if (patient == null)
             {
                 return NotFound();
@@ -155,7 +155,7 @@ namespace ClinicApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PatientExists(int id)
+        private bool PatientExists(string id)
         {
           return (_context.Patient?.Any(e => e.Id == id)).GetValueOrDefault();
         }

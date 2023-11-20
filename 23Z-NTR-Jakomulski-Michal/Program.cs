@@ -8,8 +8,8 @@ builder.Services.AddDbContext<ClinicAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ClinicAppContext") ?? 
                         throw new InvalidOperationException("Connection string 'ClinicAppContext' not found.")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ClinicAppContext>();
-
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ClinicAppContext>();
+builder.Services.AddIdentity<Patient, IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false).AddEntityFrameworkStores<ClinicAppContext>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

@@ -66,7 +66,7 @@ namespace ClinicApp.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             //[EmailAddress]
-            public string Login { get; set; }
+            public string Email { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
