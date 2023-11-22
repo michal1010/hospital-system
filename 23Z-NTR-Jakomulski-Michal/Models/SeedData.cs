@@ -3,12 +3,19 @@ using Microsoft.Extensions.DependencyInjection;
 using ClinicApp.Data;
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Identity;
 
 namespace ClinicApp.Models;
 
 public static class SeedData
 {
-    public static void Initialize(IServiceProvider serviceProvider)
+    public enum Roles
+    {
+        Director,
+        Patient,
+        Doctor
+    }
+    public static async void Initialize(IServiceProvider serviceProvider)
     {
         using (var context = new ClinicAppContext(
             serviceProvider.GetRequiredService<
@@ -93,5 +100,11 @@ public static class SeedData
             
             context.SaveChanges();
         }
+
+        //var userManager = serviceProvider.GetService<UserManager<AppUser>>();
+        var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+        await roleManager.CreateAsync(new IdentityRole(Roles.Director.ToString()));
+        await roleManager.CreateAsync(new IdentityRole(Roles.Doctor.ToString()));
+        await roleManager.CreateAsync(new IdentityRole(Roles.Patient.ToString()));
     }
 }
