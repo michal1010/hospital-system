@@ -57,7 +57,7 @@ public static class SeedData
                 }
             );
             }
-            else if( !context.Patient.Any())
+            else if (!context.Patient.Any())
             {
                 context.Patient.AddRange(
                 new Patient
