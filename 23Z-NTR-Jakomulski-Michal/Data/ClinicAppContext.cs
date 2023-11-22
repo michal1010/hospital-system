@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ClinicApp.Data
 {
-    public class ClinicAppContext : IdentityDbContext
+    public class ClinicAppContext : IdentityDbContext<AppUser>
     {
         public ClinicAppContext (DbContextOptions<ClinicAppContext> options)
             : base(options)
