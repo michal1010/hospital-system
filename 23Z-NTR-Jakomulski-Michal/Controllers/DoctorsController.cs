@@ -56,7 +56,7 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Surname, Sepcialization,Login,Password")] Doctor doctor)
+        public async Task<IActionResult> Create([Bind("Id,Name,Surname, Sepcialization,Email,Password")] Doctor doctor)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Sepcialization,Login,Password")] Doctor doctor)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Sepcialization,Email,Password")] Doctor doctor)
         {
             if (id != doctor.Id)
             {
@@ -156,9 +156,9 @@ namespace ClinicApp.Controllers
         }
 
 
-        public async Task<IActionResult> Login(string login, string password)
+        public async Task<IActionResult> Email(string Email, string password)
         {
-            Doctor? doc = await _context.Doctor.Where(d => d.Login == login)
+            Doctor? doc = await _context.Doctor.Where(d => d.Email == Email)
                                                .FirstOrDefaultAsync();
 
             if (ModelState.IsValid)

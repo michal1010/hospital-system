@@ -30,7 +30,7 @@ public static class SeedData
                     Name = "Jan",
                     Surname = "Kowalski",
                     Sepcialization = Doctor.Sepecializations.Oncology,
-                    Login = "jan",
+                    Email = "jan@gmail.com",
                     Password = "Password",
                    
 
@@ -40,7 +40,7 @@ public static class SeedData
                     Name = "Olga",
                     Surname = "Nowak",
                     Sepcialization = Doctor.Sepecializations.Dermatology,
-                    Login = "olg",
+                    Email = "olg@gmail.com",
                     Password = "Password",
 
                 },
@@ -49,7 +49,7 @@ public static class SeedData
                     Name = "Grzegorz",
                     Surname = "Braun",
                     Sepcialization = Doctor.Sepecializations.Internal,
-                    Login = "grz",
+                    Email = "grz@gmail.com",
                     Password = "Password",
 
                 },
@@ -58,7 +58,7 @@ public static class SeedData
                     Name = "Juan",
                     Surname = "Świt",
                     Sepcialization = Doctor.Sepecializations.Dermatology,
-                    Login = "hłan",
+                    Email = "hłan",
                     Password = "Password",
      
                 }
@@ -71,7 +71,7 @@ public static class SeedData
                 {
                     Name = "Jan",
                     Surname = "Słoń",
-                    Login = "jan",
+                    Email = "jan@gmail.com",
                     Password = "Password",
                     IsAccountActive = true,
 
@@ -80,7 +80,7 @@ public static class SeedData
                 {
                     Name = "Olga",
                     Surname = "Rachoń",
-                    Login = "olg",
+                    Email = "olg@gmail.com",
                     Password = "Password",
                     IsAccountActive = true
                 },
@@ -88,7 +88,7 @@ public static class SeedData
                 {
                     Name = "Grzegorz",
                     Surname = "Turkacz",
-                    Login = "grz",
+                    Email = "grz@gmail.com",
                     Password = "Password",
                     IsAccountActive = false
                 }
@@ -102,9 +102,9 @@ public static class SeedData
         }
 
         //var userManager = serviceProvider.GetService<UserManager<AppUser>>();
-        var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
-        await roleManager.CreateAsync(new IdentityRole(Roles.Director.ToString()));
-        await roleManager.CreateAsync(new IdentityRole(Roles.Doctor.ToString()));
-        await roleManager.CreateAsync(new IdentityRole(Roles.Patient.ToString()));
+        //var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+        //await roleManager.CreateAsync(new IdentityRole(Roles.Director.ToString()));
+        //await roleManager.CreateAsync(new IdentityRole(Roles.Doctor.ToString()));
+        //await roleManager.CreateAsync(new IdentityRole(Roles.Patient.ToString()));
     }
 }

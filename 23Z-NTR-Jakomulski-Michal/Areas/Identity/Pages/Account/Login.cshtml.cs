@@ -102,7 +102,7 @@ namespace ClinicApp.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string returnUrl = null, SeedData.Roles role = SeedData.Roles.Patient)
         {
             returnUrl ??= Url.Content("~/");
             //returnUrl = "~/Director";
