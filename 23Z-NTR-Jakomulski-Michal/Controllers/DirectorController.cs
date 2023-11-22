@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ClinicApp.Models;
 using ClinicApp.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClinicApp.Controllers
 {
+    [Authorize]
     public class DirectorController : Controller
     {
         //private readonly ClinicAppContext _context;
