@@ -25,5 +25,7 @@ namespace ClinicApp.Models
 
         [Display(Name = "Account is active")]
         public bool IsAccountActive { get; set; }
+        public AppUser? AppUser { get; set; }
+
     }
 }

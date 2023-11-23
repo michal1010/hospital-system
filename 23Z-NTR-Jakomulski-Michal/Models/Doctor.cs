@@ -34,5 +34,7 @@ namespace ClinicApp.Models
         [Display(Name = "Password")]
         public string Password { get; set; }
         public bool IsDirector { get; set; }
+
+        public AppUser? AppUser { get; set; }
     }
 }

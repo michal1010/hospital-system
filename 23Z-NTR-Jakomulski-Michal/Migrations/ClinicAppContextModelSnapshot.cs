@@ -34,6 +34,9 @@ namespace ClinicApp.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("DoctorId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -62,6 +65,9 @@ namespace ClinicApp.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("int");
+
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
@@ -84,6 +90,10 @@ namespace ClinicApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DoctorId")
+                        .IsUnique()
+                        .HasFilter("[DoctorId] IS NOT NULL");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -91,6 +101,10 @@ namespace ClinicApp.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.HasIndex("PatientId")
+                        .IsUnique()
+                        .HasFilter("[PatientId] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -297,6 +311,21 @@ namespace ClinicApp.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ClinicApp.Models.AppUser", b =>
+                {
+                    b.HasOne("ClinicApp.Models.Doctor", "Doctor")
+                        .WithOne("AppUser")
+                        .HasForeignKey("ClinicApp.Models.AppUser", "DoctorId");
+
+                    b.HasOne("ClinicApp.Models.Patient", "Patient")
+                        .WithOne("AppUser")
+                        .HasForeignKey("ClinicApp.Models.AppUser", "PatientId");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -346,6 +375,16 @@ namespace ClinicApp.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ClinicApp.Models.Doctor", b =>
+                {
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
+                {
+                    b.Navigation("AppUser");
                 });
 #pragma warning restore 612, 618
         }
