@@ -7,16 +7,21 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ClinicApp.Data;
 using ClinicApp.Models;
+using Microsoft.AspNetCore.Identity;
+using System.Numerics;
 
 namespace ClinicApp.Controllers
 {
     public class PatientsController : Controller
     {
         private readonly ClinicAppContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public PatientsController(ClinicAppContext context)
+
+        public PatientsController(ClinicAppContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Patients
@@ -62,6 +67,8 @@ namespace ClinicApp.Controllers
             {
                 _context.Add(patient);
                 await _context.SaveChangesAsync();
+                var user = UserFromPatientCreate(patient);
+                var result = await _userManager.CreateAsync(user, patient.Password);
                 return RedirectToAction(nameof(Index));
             }
             return View(patient);
@@ -99,8 +106,12 @@ namespace ClinicApp.Controllers
             {
                 try
                 {
+                    var user = await _context.Users.FirstOrDefaultAsync<AppUser>(m => m.PatientId == id);
+
                     _context.Update(patient);
                     await _context.SaveChangesAsync();
+                    await _userManager.UpdateAsync(UserFromPatientUpdate(patient, user));
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -146,11 +157,14 @@ namespace ClinicApp.Controllers
                 return Problem("Entity set 'ClinicAppContext.Patient'  is null.");
             }
             var patient = await _context.Patient.FindAsync(id);
-            if (patient != null)
+            var user = await _userManager.FindByEmailAsync(patient.Email);
+
+            if (patient != null && user != null)
             {
                 _context.Patient.Remove(patient);
+                await _userManager.DeleteAsync(user);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -158,6 +172,33 @@ namespace ClinicApp.Controllers
         private bool PatientExists(int id)
         {
           return (_context.Patient?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private AppUser UserFromPatientCreate(Patient patient)
+        {
+            AppUser au = Activator.CreateInstance<AppUser>();
+
+            au.UserName = patient.Email;
+            au.Name = patient.Name;
+            au.Surname = patient.Surname;
+            au.Email = patient.Email;
+            au.EmailConfirmed = true;
+            au.PhoneNumberConfirmed = true;
+            au.Patient = patient;
+            return au;
+        }
+
+        private AppUser UserFromPatientUpdate(Patient patient, AppUser user)
+        {
+
+            user.UserName = patient.Email;
+            user.Name = patient.Name;
+            user.Surname = patient.Surname;
+            user.Email = patient.Email;
+            user.EmailConfirmed = true;
+            user.PhoneNumberConfirmed = true;
+            user.Patient = patient;
+            return user;
         }
     }
 }
