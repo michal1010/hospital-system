@@ -7,16 +7,23 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ClinicApp.Models;
 using ClinicApp.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace ClinicApp.Controllers
 {
     public class DoctorsController : Controller
     {
         private readonly ClinicAppContext _context;
+        private readonly UserManager<AppUser> _userManager;
+        //private readonly RoleManager<AppUser> _roleManager;
 
-        public DoctorsController(ClinicAppContext context)
+        public DoctorsController(ClinicAppContext context, 
+                                 
+                                 UserManager<AppUser> userManager)
         {
             _context = context;
+            //_roleManager = roleManager;
+            _userManager = userManager;
         }
 
         // GET: Doctors
@@ -62,9 +69,38 @@ namespace ClinicApp.Controllers
             {
                 _context.Add(doctor);
                 await _context.SaveChangesAsync();
+                var user = UserFromDoctorCreate(doctor);
+                var result = await _userManager.CreateAsync(user, doctor.Password);
                 return RedirectToAction(nameof(Index));
             }
             return View(doctor);
+        }
+
+        private AppUser UserFromDoctorCreate(Doctor doctor)
+        {
+            AppUser au = Activator.CreateInstance<AppUser>();
+
+            au.UserName = doctor.Email;
+            au.Name = doctor.Name;
+            au.Surname = doctor.Surname;
+            au.Email = doctor.Email;
+            au.EmailConfirmed = true;
+            au.PhoneNumberConfirmed = true;
+            au.Doctor = doctor;
+            return au;
+        }
+
+        private AppUser UserFromDoctorUpdate(Doctor doctor, AppUser user)
+        {
+
+            user.UserName = doctor.Email;
+            user.Name = doctor.Name;
+            user.Surname = doctor.Surname;
+            user.Email = doctor.Email;
+            user.EmailConfirmed = true;
+            user.PhoneNumberConfirmed = true;
+            user.Doctor = doctor;
+            return user;
         }
 
         // GET: Doctors/Edit/5
@@ -76,6 +112,7 @@ namespace ClinicApp.Controllers
             }
 
             var doctor = await _context.Doctor.FindAsync(id);
+            _context.Dispose();
             if (doctor == null)
             {
                 return NotFound();
@@ -99,8 +136,12 @@ namespace ClinicApp.Controllers
             {
                 try
                 {
+                    var user = await _context.Users.FirstOrDefaultAsync<AppUser>(m => m.DoctorId == id );
+
                     _context.Update(doctor);
                     await _context.SaveChangesAsync();
+                    
+                    await _userManager.UpdateAsync(UserFromDoctorUpdate(doctor, user));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -146,9 +187,11 @@ namespace ClinicApp.Controllers
                 return Problem("Entity set 'ClinicAppContext.Doctor'  is null.");
             }
             var doctor = await _context.Doctor.FindAsync(id);
-            if (doctor != null)
+            var user = await _userManager.FindByEmailAsync(doctor.Email);
+            if (doctor != null && user != null)
             {
                 _context.Doctor.Remove(doctor);
+                await _userManager.DeleteAsync(user);
             }
 
             await _context.SaveChangesAsync();
