@@ -178,6 +178,30 @@ namespace ClinicApp.Migrations
                     b.ToTable("Patient");
                 });
 
+            modelBuilder.Entity("ClinicApp.Models.Shift", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.ToTable("Shift");
+                });
+
             modelBuilder.Entity("ClinicApp.Models.Visit", b =>
                 {
                     b.Property<int>("Id")
@@ -353,6 +377,17 @@ namespace ClinicApp.Migrations
                     b.Navigation("Doctor");
 
                     b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("ClinicApp.Models.Shift", b =>
+                {
+                    b.HasOne("ClinicApp.Models.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("ClinicApp.Models.Visit", b =>
