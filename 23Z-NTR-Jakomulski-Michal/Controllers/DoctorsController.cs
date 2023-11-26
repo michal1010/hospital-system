@@ -18,7 +18,6 @@ namespace ClinicApp.Controllers
         //private readonly RoleManager<AppUser> _roleManager;
 
         public DoctorsController(ClinicAppContext context, 
-                                 
                                  UserManager<AppUser> userManager)
         {
             _context = context;
@@ -71,6 +70,7 @@ namespace ClinicApp.Controllers
                 await _context.SaveChangesAsync();
                 var user = UserFromDoctorCreate(doctor);
                 var result = await _userManager.CreateAsync(user, doctor.Password);
+                await _userManager.AddToRoleAsync(user, SeedData.Roles.Doctor.ToString());
                 return RedirectToAction(nameof(Index));
             }
             return View(doctor);

@@ -9,9 +9,12 @@ using ClinicApp.Data;
 using ClinicApp.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Numerics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClinicApp.Controllers
 {
+    [Authorize(Roles = "Patient")]
+
     public class PatientsController : Controller
     {
         private readonly ClinicAppContext _context;
@@ -69,6 +72,8 @@ namespace ClinicApp.Controllers
                 await _context.SaveChangesAsync();
                 var user = UserFromPatientCreate(patient);
                 var result = await _userManager.CreateAsync(user, patient.Password);
+                await _userManager.AddToRoleAsync(user, SeedData.Roles.Patient.ToString());
+
                 return RedirectToAction(nameof(Index));
             }
             return View(patient);

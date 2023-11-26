@@ -120,7 +120,7 @@ public static class SeedData
             Surname = "Kowalski",
             Sepcialization = Doctor.Sepecializations.Oncology,
             Email = "jan@gmail.com",
-            Password = "Password",
+            Password = "P@ssword1",
         };
 
         using (var context = new ClinicAppContext(
@@ -169,9 +169,15 @@ public static class SeedData
 
             await userManager.CreateAsync(user, "P@ssword1");
         }
-        //var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
-        //await roleManager.CreateAsync(new IdentityRole(Roles.Director.ToString()));
-        //await roleManager.CreateAsync(new IdentityRole(Roles.Doctor.ToString()));
-        //await roleManager.CreateAsync(new IdentityRole(Roles.Patient.ToString()));
+        var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+        if (!roleManager.Roles.Any())
+        {
+            await roleManager.CreateAsync(new IdentityRole(Roles.Director.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(Roles.Doctor.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(Roles.Patient.ToString()));
+            //await roleManager.CreateAsync(new IdentityRole(Roles.Director.ToString()));
+            //await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
+        }
+        await userManager.AddToRoleAsync(users[0], Roles.Director.ToString());
     }
 }

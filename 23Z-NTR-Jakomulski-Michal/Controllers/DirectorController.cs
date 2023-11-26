@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ClinicApp.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Director")]
     public class DirectorController : Controller
     {
         //private readonly ClinicAppContext _context;
