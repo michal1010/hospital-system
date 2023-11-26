@@ -18,5 +18,7 @@ namespace ClinicApp.Data
         public DbSet<ClinicApp.Models.Doctor> Doctor { get; set; } = default!;
 
         public DbSet<ClinicApp.Models.Patient> Patient { get; set; } = default!;
+
+        public DbSet<ClinicApp.Models.Visit> Visit { get; set; } = default!;
     }
 }
