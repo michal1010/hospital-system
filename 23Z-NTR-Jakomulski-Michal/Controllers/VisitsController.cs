@@ -59,7 +59,7 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DoctorId,PatientId,VisitTime")] Visit visit)
+        public async Task<IActionResult> Create([Bind("Id,DoctorId,PatientId,StartTime,EndTime")] Visit visit)
         {
             if (ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DoctorId,PatientId,VisitTime")] Visit visit)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DoctorId,PatientId,StartTime,EndTime")] Visit visit)
         {
             if (id != visit.Id)
             {
