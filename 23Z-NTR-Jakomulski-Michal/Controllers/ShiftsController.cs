@@ -15,26 +15,35 @@ namespace ClinicApp.Controllers
     {
         private readonly ClinicAppContext _context;
         public int CurrentWeekNumber {  get; set; }
+        private static bool isOnIndex;
 
         public ShiftsController(ClinicAppContext context)
         {
             _context = context;
-            //var currentDate = DateTime.Now;
-            //CurrentWeekNumber = CultureInfo.CurrentCulture.Calendar
-            //                                .GetWeekOfYear(currentDate, 
-            //                                CalendarWeekRule.FirstFourDayWeek,DayOfWeek.Monday);
-            //ViewData["currentWeek"] = CurrentWeekNumber;
-
         }
 
         // GET: Shifts
         public async Task<IActionResult> Index()
+        {
+            isOnIndex = true;
+            PrepareViemVariables();
+            var clinicAppContext = _context.Shift.Include(s => s.Doctor);
+            return View(await clinicAppContext.ToListAsync());
+        }
+
+        private void PrepareViemVariables()
         {
             DateTime startWeek, endWeek;
             GetWeekRange(out startWeek, out endWeek);
             ViewBag.StartWeek = startWeek.ToString("yyyy-MM-dd");
             ViewBag.EndWeek = endWeek.ToString("yyyy-MM-dd");
             ViewBag.CurrentWeekNumber = Parameters.CurrentWeekNumber;
+        }
+
+        public async Task<IActionResult> OnlyViewShifts()
+        {
+            isOnIndex = false;
+            PrepareViemVariables();
             var clinicAppContext = _context.Shift.Include(s => s.Doctor);
             return View(await clinicAppContext.ToListAsync());
         }
@@ -181,12 +190,16 @@ namespace ClinicApp.Controllers
         public IActionResult DecreaseNumberWeeks()
         {
             Parameters.CurrentWeekNumber--;
-            return RedirectToAction(nameof(Index));
+            var returnName = isOnIndex ? nameof(Index) : nameof(OnlyViewShifts);
+
+            return RedirectToAction(returnName);
         }
         public IActionResult IncreaseNumberWeeks() 
         { 
             Parameters.CurrentWeekNumber++;
-            return RedirectToAction(nameof(Index));
+            var returnName = isOnIndex ? nameof(Index) : nameof(OnlyViewShifts);
+
+            return RedirectToAction(returnName);
         }
 
         public IActionResult CopyPreviosWeek()
@@ -213,6 +226,7 @@ namespace ClinicApp.Controllers
             }).ToList();
             _context.Shift.AddRange(targetWeekShifts);
             _context.SaveChanges();
+
             return RedirectToAction(nameof(Index));
         }
 
