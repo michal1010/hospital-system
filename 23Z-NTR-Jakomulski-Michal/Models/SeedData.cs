@@ -15,101 +15,9 @@ public static class SeedData
     public static async Task Initialize(IServiceProvider serviceProvider)
     {
         Parameters.GetInstance();
-        //using (var context = new ClinicAppContext(
-        //    serviceProvider.GetRequiredService<
-        //        DbContextOptions<ClinicAppContext>>()))
-        //{
-        //    // Look for any Doctors.
-        //    if (!context.Doctor.Any())
-        //    {
-        //        context.Doctor.AddRange(
-        //        new Doctor
-        //        {
-        //            Name = "Jan",
-        //            Surname = "Kowalski",
-        //            Sepcialization = Doctor.Sepecializations.Oncology,
-        //            Email = "jan@gmail.com",
-        //            Password = "Password",
-                   
-
-        //        },
-        //        new Doctor
-        //        {
-        //            Name = "Olga",
-        //            Surname = "Nowak",
-        //            Sepcialization = Doctor.Sepecializations.Dermatology,
-        //            Email = "olg@gmail.com",
-        //            Password = "Password",
-
-        //        },
-        //        new Doctor
-        //        {
-        //            Name = "Grzegorz",
-        //            Surname = "Braun",
-        //            Sepcialization = Doctor.Sepecializations.Internal,
-        //            Email = "grz@gmail.com",
-        //            Password = "Password",
-
-        //        },
-        //        new Doctor
-        //        {
-        //            Name = "Juan",
-        //            Surname = "Świt",
-        //            Sepcialization = Doctor.Sepecializations.Dermatology,
-        //            Email = "hłan",
-        //            Password = "Password",
-     
-        //        }
-        //    );
-        //    }
-        //    else if (!context.Patient.Any())
-        //    {
-        //        context.Patient.AddRange(
-        //        new Patient
-        //        {
-        //            Name = "Jan",
-        //            Surname = "Słoń",
-        //            Email = "jan@gmail.com",
-        //            Password = "Password",
-        //            IsAccountActive = true,
-
-        //        },
-        //        new Patient
-        //        {
-        //            Name = "Olga",
-        //            Surname = "Rachoń",
-        //            Email = "olg@gmail.com",
-        //            Password = "Password",
-        //            IsAccountActive = true
-        //        },
-        //        new Patient
-        //        {
-        //            Name = "Grzegorz",
-        //            Surname = "Turkacz",
-        //            Email = "grz@gmail.com",
-        //            Password = "Password",
-        //            IsAccountActive = false
-        //        }
-        //        );
-        //    }
-        //    else { ; }
-           
-            
-            
-        //    //context.SaveChanges();
-        //}
+       
 
         var userManager = serviceProvider.GetService<UserManager<AppUser>>();
-        //var userStore = serviceProvider.GetService<IUserStore<AppUser>>();
-        //var emailStore = (IUserEmailStore<AppUser>)userStore;
-        ////var signInManager = serviceProvider.GetService<SignInManager<AppUser>>();
-
-        //var user = Activator.CreateInstance<AppUser>();
-        //user.Name = "Jan";
-        //user.Surname = "Słoń";
-        //await userStore.SetUserNameAsync(user, "jan@gmail.com", CancellationToken.None);
-        //await emailStore.SetEmailAsync(user, "jan@gmail.com", CancellationToken.None);
-        //var result = await userManager.CreateAsync(user, "P@ssword1");
 
         Doctor doc = new Doctor
         {
@@ -134,47 +42,38 @@ public static class SeedData
                     Name = "Jan",
                     Surname = "Kowalski",
                     Email = "jan@gmail.com",
-                    //PasswordHash = "P@ssword1",
                     EmailConfirmed = true,
                     PhoneNumberConfirmed = true,
                     Doctor = doc
             },
-            //new AppUser
-            //{
-            //        UserName = "olg@gmail.com",
-            //        Name = "Olga",
-            //        Surname = "Nowak",
-            //        Email = "olg@gmail.com",
-            //        //PasswordHash = "P@ssword1",
-            //         EmailConfirmed = true,
-            //        PhoneNumberConfirmed = true
-            //},
-            //new AppUser
-            //{
-            //    UserName = "grz@gmail.com",
-            //        Name = "Grzegorz",
-            //        Surname = "Braun",
-            //        Email = "grz@gmail.com",
-            //        //PasswordHash = "P@ssword1",
-            //         EmailConfirmed = true,
-            //        PhoneNumberConfirmed = true
-            //}
         };
 
-        foreach (var user in users)
-        {
 
-            await userManager.CreateAsync(user, "P@ssword1");
-        }
         var roleManager = serviceProvider.GetService<RoleManager<IdentityRole>>();
+
+        if (roleManager == null) throw new Exception("Role manager is null");
+
         if (!roleManager.Roles.Any())
         {
             await roleManager.CreateAsync(new IdentityRole(Roles.Director.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Roles.Doctor.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Roles.Patient.ToString()));
-            //await roleManager.CreateAsync(new IdentityRole(Roles.Director.ToString()));
-            //await roleManager.CreateAsync(new IdentityRole(Roles.User.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(Roles.Patient.ToString())); ;
         }
-        await userManager.AddToRoleAsync(users[0], Roles.Director.ToString());
+
+
+        if (userManager == null)
+            throw new Exception("User Manger is null");
+
+        if (!userManager.Users.Any())
+        {
+            foreach (var user in users) { 
+            
+                await userManager.CreateAsync(user, "P@ssword1");
+            }
+            await userManager.AddToRoleAsync(users[0], Roles.Director.ToString());
+
+        }
+
+
     }
 }
