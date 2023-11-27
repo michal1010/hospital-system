@@ -8,13 +8,13 @@
     </h1> *@
 
     <div class="container mt-4">
-        <h2 class="mb-5">Choose the view</h2>
+        <h2 class="mb-5">Choose the user</h2>
 
         <a href="@Url.Action("Index", "Director")" class="btn btn-primary ">Director</a>
 
-        <a href="@Url.Action("Index", "Patients")" class="btn btn-success ">Doctor</a>
+        <a href="@Url.Action("OnlyViewShifts", "Shifts")" class="btn btn-success ">Doctor</a>
 
-        <a href="@Url.Action("Index", "Patients")" class="btn btn-info">Pateint</a>
+        <a href="@Url.Action("OnlyViewShifts", "Shifts")" class="btn btn-info">Patient</a>
 
     </div>
     @* <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
