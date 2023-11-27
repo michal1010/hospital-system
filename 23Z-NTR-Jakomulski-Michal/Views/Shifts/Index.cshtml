@@ -26,13 +26,19 @@
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Doctor)
+                    @Html.DisplayNameFor(model => model.Doctor.Name)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.StartTime)
+                    @Html.DisplayNameFor(model => model.Doctor.Surname)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.EndTime)
+                    @Html.DisplayNameFor(model=> model.Doctor.Sepcialization)
+                </th>
+                <th>
+                    Start time
+                </th>
+                <th>
+                    End time
                 </th>
                 <th></th>
             </tr>
@@ -42,7 +48,13 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.Email)
+                        @Html.DisplayFor(modelItem => item.Doctor.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Doctor.Surname)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Doctor.Sepcialization)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.StartTime)
@@ -66,4 +78,7 @@
     <a asp-action="DecreaseNumberWeeks" >Previous Week</a>
     |
     <a asp-action="IncreaseNumberWeeks" >Next Week</a>
+</div>
+<div>
+    <a asp-action="CopyPreviosWeek">Copy this week</a>
 </div>

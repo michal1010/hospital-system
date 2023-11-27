@@ -184,5 +184,42 @@ namespace ClinicApp.Controllers
             Parameters.CurrentWeekNumber++;
             return RedirectToAction(nameof(Index));
         }
+
+        public IActionResult CopyPreviosWeek()
+        {
+            DateTime startWeek, endWeek;
+            GetWeekRange(out startWeek, out endWeek);
+
+            var sourceWeekShifts = _context.Shift
+                .Where(shift => shift.StartTime >= startWeek && shift.EndTime <= endWeek)
+                .ToList();
+
+            var targetWeekShifts = sourceWeekShifts.Select(shift =>
+            {
+                var adjustedStartTime = shift.StartTime.AddDays(7);
+                var adjustedEndTime = shift.EndTime.AddDays(7);
+
+                return new Shift
+                {
+                    StartTime = adjustedStartTime,
+                    EndTime = adjustedEndTime,
+                    Doctor = shift.Doctor,
+                    DoctorId = shift.DoctorId
+                };
+            }).ToList();
+            _context.Shift.AddRange(targetWeekShifts);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private static void GetWeekRange(out DateTime startWeek, out DateTime endWeek)
+        {
+            int year = DateTime.Now.Year;
+            DateTime startYear = new DateTime(year, 1, 1);
+            int weekNumber = Parameters.CurrentWeekNumber;
+            startWeek = startYear.AddDays((weekNumber - 1) * 7 -
+                                                    (int)startYear.DayOfWeek + (int)DayOfWeek.Monday);
+            endWeek = startWeek.AddDays(6);
+        }
     }
 }
