@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ClinicApp.Controllers
 {
-    [Authorize(Roles = "Patient"+", "+"Doctor")]
+   
 
     public class ShiftsController : Controller
     {
@@ -26,6 +26,7 @@ namespace ClinicApp.Controllers
         }
 
         // GET: Shifts
+        [Authorize(Roles ="Director")]
         public async Task<IActionResult> Index()
         {
             isOnIndex = true;
@@ -43,6 +44,7 @@ namespace ClinicApp.Controllers
             ViewBag.CurrentWeekNumber = Parameters.CurrentWeekNumber;
         }
 
+        [Authorize(Roles = "Patient" + ", " + "Doctor")]
         public async Task<IActionResult> OnlyViewShifts()
         {
             isOnIndex = false;

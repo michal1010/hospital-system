@@ -13,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ClinicApp.Controllers
 {
-    [Authorize(Roles = "Patient")]
 
     public class PatientsController : Controller
     {
