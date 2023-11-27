@@ -72,7 +72,7 @@ namespace ClinicApp.Controllers
                 await _context.SaveChangesAsync();
                 var user = UserFromPatientCreate(patient);
                 var result = await _userManager.CreateAsync(user, patient.Password);
-                await _userManager.AddToRoleAsync(user, SeedData.Roles.Patient.ToString());
+                await _userManager.AddToRoleAsync(user, Parameters.Roles.Patient.ToString());
 
                 return RedirectToAction(nameof(Index));
             }

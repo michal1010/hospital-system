@@ -134,7 +134,7 @@ namespace ClinicApp.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, SeedData.Roles.Patient.ToString());
+                    await _userManager.AddToRoleAsync(user, Parameters.Roles.Patient.ToString());
                     Patient patient = new Patient
                     {
                         Name = Input.Name,

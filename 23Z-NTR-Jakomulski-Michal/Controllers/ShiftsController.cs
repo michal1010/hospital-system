@@ -19,10 +19,10 @@ namespace ClinicApp.Controllers
         public ShiftsController(ClinicAppContext context)
         {
             _context = context;
-            var currentDate = DateTime.Now;
-            CurrentWeekNumber = CultureInfo.CurrentCulture.Calendar
-                                            .GetWeekOfYear(currentDate, 
-                                            CalendarWeekRule.FirstFourDayWeek,DayOfWeek.Monday);
+            //var currentDate = DateTime.Now;
+            //CurrentWeekNumber = CultureInfo.CurrentCulture.Calendar
+            //                                .GetWeekOfYear(currentDate, 
+            //                                CalendarWeekRule.FirstFourDayWeek,DayOfWeek.Monday);
             //ViewData["currentWeek"] = CurrentWeekNumber;
 
         }

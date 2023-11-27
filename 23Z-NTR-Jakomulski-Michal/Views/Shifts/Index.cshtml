@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ClinicApp.Models.Shift>
+﻿@using System.Globalization;
+@model IEnumerable<ClinicApp.Models.Shift>
 
 @{
     ViewData["Title"] = "Index";
@@ -11,41 +12,58 @@
     <a asp-action="Create">Create New</a>
 </p>
 @{
-    var groupedShifts = Model.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
+    int currentWeekNumber = ViewBag.CurrentWeekNumber;
+    var shiftsForCurrentWeek = Model
+        .Where(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday) == currentWeekNumber)
+        .OrderBy(item => item.StartTime)
+        .ToList();
+
+    var groupedShifts = shiftsForCurrentWeek.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
 }
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Doctor)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndTime)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Doctor.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndTime)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@foreach(var group in groupedShifts)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Doctor)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StartTime)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EndTime)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in group)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Doctor.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EndTime)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
 }
-    </tbody>
-</table>
+
+<div>
+    <a asp-action="DecreaseNumberWeeks" >Previous Week</a>
+    |
+    <a asp-action="IncreaseNumberWeeks" >Next Week</a>
+</div>

@@ -4,7 +4,14 @@ namespace ClinicApp.Models
 {
     public record Parameters
     {
-        public Parameters()
+        private static Parameters? _instance;
+        public static Parameters GetInstance()
+        {
+            if(_instance == null)
+                _instance = new Parameters();
+            return _instance;
+        }
+        private Parameters()
         {
             var currentDate = DateTime.Now;
             CurrentWeekNumber = CultureInfo.CurrentCulture.Calendar

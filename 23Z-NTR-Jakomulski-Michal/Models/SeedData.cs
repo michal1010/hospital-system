@@ -14,6 +14,7 @@ public static class SeedData
 
     public static async Task Initialize(IServiceProvider serviceProvider)
     {
+        Parameters.GetInstance();
         //using (var context = new ClinicAppContext(
         //    serviceProvider.GetRequiredService<
         //        DbContextOptions<ClinicAppContext>>()))
