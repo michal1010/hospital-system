@@ -30,6 +30,10 @@ namespace ClinicApp.Controllers
         // GET: Shifts
         public async Task<IActionResult> Index()
         {
+            DateTime startWeek, endWeek;
+            GetWeekRange(out startWeek, out endWeek);
+            ViewBag.StartWeek = startWeek.ToString("yyyy-MM-dd");
+            ViewBag.EndWeek = endWeek.ToString("yyyy-MM-dd");
             ViewBag.CurrentWeekNumber = Parameters.CurrentWeekNumber;
             var clinicAppContext = _context.Shift.Include(s => s.Doctor);
             return View(await clinicAppContext.ToListAsync());
