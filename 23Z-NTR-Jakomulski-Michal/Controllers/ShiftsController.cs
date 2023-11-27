@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using ClinicApp.Data;
 using ClinicApp.Models;
 using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ClinicApp.Controllers
 {
+    [Authorize(Roles = "Patient"+", "+"Doctor")]
+
     public class ShiftsController : Controller
     {
         private readonly ClinicAppContext _context;
