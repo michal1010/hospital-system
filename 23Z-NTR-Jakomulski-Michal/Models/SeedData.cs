@@ -5,17 +5,13 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using static ClinicApp.Models.Parameters;
 
 namespace ClinicApp.Models;
 
 public static class SeedData
 {
-    public enum Roles
-    {
-        Director,
-        Patient,
-        Doctor
-    }
+
     public static async Task Initialize(IServiceProvider serviceProvider)
     {
         //using (var context = new ClinicAppContext(

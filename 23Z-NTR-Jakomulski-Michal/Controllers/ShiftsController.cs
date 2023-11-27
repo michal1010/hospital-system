@@ -7,21 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ClinicApp.Data;
 using ClinicApp.Models;
+using System.Globalization;
 
 namespace ClinicApp.Controllers
 {
     public class ShiftsController : Controller
     {
         private readonly ClinicAppContext _context;
+        public int CurrentWeekNumber {  get; set; }
 
         public ShiftsController(ClinicAppContext context)
         {
             _context = context;
+            var currentDate = DateTime.Now;
+            CurrentWeekNumber = CultureInfo.CurrentCulture.Calendar
+                                            .GetWeekOfYear(currentDate, 
+                                            CalendarWeekRule.FirstFourDayWeek,DayOfWeek.Monday);
+            //ViewData["currentWeek"] = CurrentWeekNumber;
+
         }
 
         // GET: Shifts
         public async Task<IActionResult> Index()
         {
+            ViewBag.CurrentWeekNumber = Parameters.CurrentWeekNumber;
             var clinicAppContext = _context.Shift.Include(s => s.Doctor);
             return View(await clinicAppContext.ToListAsync());
         }
@@ -163,6 +172,17 @@ namespace ClinicApp.Controllers
         private bool ShiftExists(int id)
         {
           return (_context.Shift?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public IActionResult DecreaseNumberWeeks()
+        {
+            Parameters.CurrentWeekNumber--;
+            return RedirectToAction(nameof(Index));
+        }
+        public IActionResult IncreaseNumberWeeks() 
+        { 
+            Parameters.CurrentWeekNumber++;
+            return RedirectToAction(nameof(Index));
         }
     }
 }
