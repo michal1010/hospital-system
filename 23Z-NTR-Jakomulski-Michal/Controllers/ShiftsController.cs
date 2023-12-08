@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ClinicApp.Controllers
 {
-   
+
 
     public class ShiftsController : Controller
     {
@@ -82,10 +82,11 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,DoctorId,StartTime,EndTime")] Shift shift)
+        public async Task<IActionResult> Create([Bind("Id,DoctorId,StartTime")] Shift shift)
         {
+
             if (ModelState.IsValid)
-            {
+            { 
                 _context.Add(shift);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -116,7 +117,7 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DoctorId,StartTime,EndTime")] Shift shift)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,DoctorId,StartTime")] Shift shift)
         {
             if (id != shift.Id)
             {
@@ -224,18 +225,17 @@ namespace ClinicApp.Controllers
             GetWeekRange(out startWeek, out endWeek);
 
             var sourceWeekShifts = _context.Shift
-                .Where(shift => shift.StartTime >= startWeek && shift.EndTime <= endWeek)
+                .Where(shift => shift.StartTime >= startWeek && shift.StartTime <= endWeek)
                 .ToList();
 
             var targetWeekShifts = sourceWeekShifts.Select(shift =>
             {
                 var adjustedStartTime = shift.StartTime.AddDays(7);
-                var adjustedEndTime = shift.EndTime.AddDays(7);
+
 
                 return new Shift
                 {
                     StartTime = adjustedStartTime,
-                    EndTime = adjustedEndTime,
                     Doctor = shift.Doctor,
                     DoctorId = shift.DoctorId
                 };

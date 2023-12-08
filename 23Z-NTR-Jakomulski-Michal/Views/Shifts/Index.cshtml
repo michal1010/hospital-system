@@ -1,4 +1,5 @@
 ﻿@using System.Globalization;
+@using ClinicApp.Data;
 @model IEnumerable<ClinicApp.Models.Shift>
 
 @{
@@ -64,7 +65,7 @@
                         @Html.DisplayFor(modelItem => item.StartTime)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EndTime)
+                        @item.StartTime.AddMinutes(Constants.MINUTES_VISIT).ToString(Constants.DATE_FORMAT)
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
