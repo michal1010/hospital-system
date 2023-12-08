@@ -255,5 +255,37 @@ namespace ClinicApp.Controllers
                                                     (int)startYear.DayOfWeek + (int)DayOfWeek.Monday);
             endWeek = startWeek.AddDays(6);
         }
+
+        //public async Task<IActionResult> CreateShift(DateTime startTime, DateTime endTime, int id)
+        //{
+
+        //}
+
+        private int CreateNumberOfAppointments(DateTime start, DateTime end)
+        {
+            TimeSpan difference = end - start;
+
+            int visitsCuantity = (int)(difference.TotalMinutes / 15);
+            int shiftDivided = (int)(difference.TotalMinutes % 15);
+
+
+            if (difference < TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException("The start date is grater then the end date");
+            else if (shiftDivided != 0)
+            {
+                double minutesBefore = shiftDivided * 15;
+                double minutesAfter = (shiftDivided + 1) * 15;
+
+                string appointementBefore = start.AddMinutes(minutesBefore).ToString("HH:mm");
+                string appointementAfter = start.AddMinutes(minutesAfter).ToString("HH:mm");
+
+                // TODO: user define exception so I can return some arguemnts in the exception
+                throw new ArgumentException($"The shift can't be divided on appointments" +
+                                            $"{appointementBefore} or {appointementAfter}");
+            }
+
+            return visitsCuantity;
+
+        }
     }
 }
