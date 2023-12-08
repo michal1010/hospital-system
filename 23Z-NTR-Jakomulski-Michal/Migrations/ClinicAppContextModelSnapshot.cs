@@ -192,9 +192,6 @@ namespace ClinicApp.Migrations
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
                     b.Property<int?>("PatientId")
                         .HasColumnType("int");
 
