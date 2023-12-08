@@ -18,7 +18,7 @@ namespace ClinicApp.Controllers
     {
         private readonly ClinicAppContext _context;
         public int CurrentWeekNumber {  get; set; }
-        private static bool isOnIndex;
+        //private static bool isOnIndex;
 
         public ShiftsController(ClinicAppContext context)
         {
@@ -29,7 +29,6 @@ namespace ClinicApp.Controllers
         [Authorize(Roles ="Director")]
         public async Task<IActionResult> Index()
         {
-            isOnIndex = true;
             PrepareViemVariables();
             var clinicAppContext = _context.Shift.Include(s => s.Doctor);
             return View(await clinicAppContext.ToListAsync());
@@ -47,7 +46,6 @@ namespace ClinicApp.Controllers
         [Authorize(Roles = "Patient" + ", " + "Doctor")]
         public async Task<IActionResult> OnlyViewShifts()
         {
-            isOnIndex = false;
             PrepareViemVariables();
             var clinicAppContext = _context.Shift.Include(s => s.Doctor);
             return View(await clinicAppContext.ToListAsync());
@@ -195,16 +193,29 @@ namespace ClinicApp.Controllers
         public IActionResult DecreaseNumberWeeks()
         {
             Parameters.CurrentWeekNumber--;
-            var returnName = isOnIndex ? nameof(Index) : nameof(OnlyViewShifts);
 
-            return RedirectToAction(returnName);
+            return RedirectToAction("Index");
         }
         public IActionResult IncreaseNumberWeeks() 
         { 
             Parameters.CurrentWeekNumber++;
-            var returnName = isOnIndex ? nameof(Index) : nameof(OnlyViewShifts);
 
-            return RedirectToAction(returnName);
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult DecreaseNumberWeeksReadonly()
+        {
+            Parameters.CurrentWeekNumber--;
+         
+
+            return RedirectToAction("OnlyViewShifts");
+        }
+        public IActionResult IncreaseNumberWeeksReadonly()
+        {
+            Parameters.CurrentWeekNumber++;
+            
+
+            return RedirectToAction("OnlyViewShifts");
         }
 
         public IActionResult CopyPreviosWeek()
