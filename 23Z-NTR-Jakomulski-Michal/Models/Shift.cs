@@ -13,6 +13,7 @@ namespace ClinicApp.Models
         
         public string? Description { get; set; }
 
+        [Display(Name="Start time")]
         [DisplayFormat(DataFormatString = $"{{0:{Constants.DATE_FORMAT}}}", ApplyFormatInEditMode = true)]
         public DateTime StartTime {  get; set; }
     }
