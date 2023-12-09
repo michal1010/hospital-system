@@ -12,8 +12,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ClinicApp.Controllers
 {
-
-
     public class AppointmentsController : Controller
     {
         private readonly ClinicAppContext _context;
@@ -43,8 +41,15 @@ namespace ClinicApp.Controllers
             ViewBag.CurrentWeekNumber = Parameters.CurrentWeekNumber;
         }
 
-        [Authorize(Roles = "Patient" + ", " + "Doctor")]
-        public async Task<IActionResult> OnlyViewAppointments()
+        [Authorize(Roles = "Patient")]
+        public async Task<IActionResult> AppointmentsListPatient()
+        {
+            PrepareViemVariables();
+            var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
+            return View(await clinicAppContext.ToListAsync());
+        }
+        [Authorize(Roles = "Doctor")]
+        public async Task<IActionResult> AppointmentsListDoctor()
         {
             PrepareViemVariables();
             var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
@@ -204,19 +209,34 @@ namespace ClinicApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult DecreaseNumberWeeksReadonly()
+        public IActionResult DecreaseNumberWeeksPatient()
         {
             Parameters.CurrentWeekNumber--;
          
 
-            return RedirectToAction("OnlyViewAppointments");
+            return RedirectToAction("AppointmentsListPatient");
         }
-        public IActionResult IncreaseNumberWeeksReadonly()
+        public IActionResult IncreaseNumberWeeksPatient()
         {
             Parameters.CurrentWeekNumber++;
             
 
-            return RedirectToAction("OnlyViewAppointments");
+            return RedirectToAction("AppointmentsListPatient");
+        }
+
+        public IActionResult DecreaseNumberWeeksDoctor()
+        {
+            Parameters.CurrentWeekNumber--;
+
+
+            return RedirectToAction("AppointmentsListDoctor");
+        }
+        public IActionResult IncreaseNumberWeeksDoctor()
+        {
+            Parameters.CurrentWeekNumber++;
+
+
+            return RedirectToAction("AppointmentsListDoctor");
         }
 
         public IActionResult CopyPreviosWeek()

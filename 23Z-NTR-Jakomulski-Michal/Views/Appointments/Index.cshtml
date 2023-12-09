@@ -21,6 +21,19 @@
 
     var groupedAppointments = AppointmentsForCurrentWeek.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
 }
+
+<div>
+    <a asp-action="DecreaseNumberWeeks">Previous Week</a>
+    |
+    <a asp-action="IncreaseNumberWeeks">Next Week</a>
+</div>
+<div>
+    <a asp-action="CopyPreviosWeek">Copy this week</a>
+    |
+    <a href="@Url.Action("Index", "Director")">Back</a>
+</div>
+
+
 @foreach(var group in groupedAppointments)
 {
     <table class="table">
@@ -80,14 +93,3 @@
 
 }
 
-<div>
-    <a asp-action="DecreaseNumberWeeks" >Previous Week</a>
-    |
-    <a asp-action="IncreaseNumberWeeks" >Next Week</a>
-</div>
-<div>
-    <a asp-action="CopyPreviosWeek">Copy this week</a>
-</div>
-<p>
-    <a href="@Url.Action("Index", "Director")">Back</a>
-</p>
