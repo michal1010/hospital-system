@@ -109,6 +109,35 @@ namespace ClinicApp.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ClinicApp.Models.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Appointment");
+                });
+
             modelBuilder.Entity("ClinicApp.Models.Doctor", b =>
                 {
                     b.Property<int>("Id")
@@ -378,6 +407,23 @@ namespace ClinicApp.Migrations
                     b.HasOne("ClinicApp.Models.Patient", "Patient")
                         .WithOne("AppUser")
                         .HasForeignKey("ClinicApp.Models.AppUser", "PatientId");
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+                });
+
+            modelBuilder.Entity("ClinicApp.Models.Appointment", b =>
+                {
+                    b.HasOne("ClinicApp.Models.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ClinicApp.Models.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientId");
 
                     b.Navigation("Doctor");
 

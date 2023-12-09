@@ -22,5 +22,7 @@ namespace ClinicApp.Data
         public DbSet<ClinicApp.Models.Visit> Visit { get; set; } = default!;
 
         public DbSet<ClinicApp.Models.Shift> Shift { get; set; } = default!;
+        public DbSet<ClinicApp.Models.Appointment> Appointment { get; set; } = default!;
+
     }
 }
