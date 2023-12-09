@@ -71,7 +71,9 @@
                     <td>
                         @item.StartTime.AddMinutes(Constants.MINUTES_VISIT).ToString(Constants.DATE_FORMAT)
                     </td>
-                    
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                    </td>
                 </tr>
             }
         </tbody>
