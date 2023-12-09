@@ -9,6 +9,7 @@ using ClinicApp.Data;
 using ClinicApp.Models;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
+using System.Numerics;
 
 namespace ClinicApp.Controllers
 {
@@ -339,6 +340,56 @@ namespace ClinicApp.Controllers
 
             return visitsCuantity;
 
+        }
+
+        public async Task<IActionResult> AddDescription(int? id)
+        {
+            if (id == null || _context.Appointment == null)
+            {
+                return NotFound();
+            }
+            var appointemnt = await _context.Appointment.FindAsync(id);
+            _context.Dispose(); // TODO: Check if it's necessary
+            if (appointemnt == null)
+            {
+                return NotFound();
+            }
+            if (appointemnt.Description == null)
+            {
+                appointemnt.Description = "";
+            }
+            return View(appointemnt);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddDescription(int id, [Bind("Id,DoctorId,StartTime,Description")] Appointment appointment)
+        {
+            if (id != appointment.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(appointment);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AppointmentExists(appointment.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(AppointmentsListDoctor));
+            }
+            return View(appointment);
         }
     }
 }
