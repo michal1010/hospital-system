@@ -71,7 +71,7 @@ namespace ClinicApp.Controllers
         }
 
         // GET: Appointments/Create
-        public IActionResult Create()
+        public IActionResult CreateShift()
         {
             ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "Email");
             return View();
@@ -256,58 +256,69 @@ namespace ClinicApp.Controllers
             endWeek = startWeek.AddDays(6);
         }
 
-        //public async Task<IActionResult> CreateShit([Bind("Id,DoctorId,StartTime,EndTime")] Appointment Appointment)
-        //{
-        //    if(ModelState.IsValid)
-        //    {
+        [HttpPost]
+        public async Task<IActionResult> CreateShift([Bind("Id,DoctorId,StartTime,EndTime")] Shift shift)
+        {
+            if (ModelState.IsValid)
+            {
+                await CreateAppointments(shift);
+                return RedirectToAction(nameof(Index));
+            }
+            //ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "Email", Appointment.DoctorId);
 
-        //    }
-        //}
-        //public async Task<IActionResult> CreateAppointments(DateTime startTime, DateTime endTime, int id)
-        //{
-        //    try
-        //    {
-        //        int numberAppointemts = CreateNumberOfAppointments(startTime, endTime);
-        //        DateTime appointemntStart = startTime;
-            
-        //        for (int i = 0; i < numberAppointemts; i++)
-        //        {
-        //            //await Create()
-        //        }
-        //    }
-        //    catch (ArgumentException argEx)
-        //    {
+            return View();
+        }
+        public async Task CreateAppointments(Shift shift)
+        {
+            try
+            {
+                int numberAppointemts = CreateNumberOfAppointments(shift.StartTime, shift.EndTime);
+                DateTime appointemntStart = shift.StartTime;
+                int doctorId = shift.DoctorId;
+
+                for (int i = 0; i < numberAppointemts; i++)
+                {
+                    // TODO: How to manage properly null values
+                    await Create(new Appointment
+                    {
+                        DoctorId = doctorId,
+                        StartTime = appointemntStart
+                    }); ;
+                    appointemntStart = appointemntStart.AddMinutes(15);
+                }
+            }
+            catch (ArgumentException exception)
+            {
 
 
-        //    }
+            }
+        }
 
-        //}
+        private int CreateNumberOfAppointments(DateTime start, DateTime end)
+        {
+            TimeSpan difference = end - start;
 
-        //private int CreateNumberOfAppointments(DateTime start, DateTime end)
-        //{
-        //    TimeSpan difference = end - start;
-
-        //    int visitsCuantity = (int)(difference.TotalMinutes / 15);
-        //    int AppointmentDivided = (int)(difference.TotalMinutes % 15);
+            int visitsCuantity = (int)(difference.TotalMinutes / 15);
+            int AppointmentDivided = (int)(difference.TotalMinutes % 15);
 
 
-        //    if (difference < TimeSpan.Zero)
-        //        throw new ArgumentException("The start date is grater then the end date");
-        //    else if (AppointmentDivided != 0)
-        //    {
-        //        double minutesBefore = AppointmentDivided * 15;
-        //        double minutesAfter = (AppointmentDivided + 1) * 15;
+            if (difference < TimeSpan.Zero)
+                throw new ArgumentException("The start date is grater then the end date");
+            else if (AppointmentDivided != 0)
+            {
+                double minutesBefore = AppointmentDivided * 15;
+                double minutesAfter = (AppointmentDivided + 1) * 15;
 
-        //        string appointementBefore = start.AddMinutes(minutesBefore).ToString("HH:mm");
-        //        string appointementAfter = start.AddMinutes(minutesAfter).ToString("HH:mm");
+                string appointementBefore = start.AddMinutes(minutesBefore).ToString("HH:mm");
+                string appointementAfter = start.AddMinutes(minutesAfter).ToString("HH:mm");
 
-        //        // TODO: user define exception so I can return some arguemnts in the exception
-        //        throw new ArgumentException($"The Appointment can't be divided on appointments" +
-        //                                    $"{appointementBefore} or {appointementAfter}");
-        //    }
+                // TODO: user define exception so I can return some arguemnts in the exception
+                throw new ArgumentException($"The Appointment can't be divided on appointments" +
+                                            $"{appointementBefore} or {appointementAfter}");
+            }
 
-        //    return visitsCuantity;
+            return visitsCuantity;
 
-        //}
+        }
     }
 }
