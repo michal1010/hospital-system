@@ -10,6 +10,7 @@ using ClinicApp.Models;
 using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using System.Numerics;
+using Microsoft.AspNetCore.Identity;
 
 namespace ClinicApp.Controllers
 {
@@ -18,10 +19,12 @@ namespace ClinicApp.Controllers
         private readonly ClinicAppContext _context;
         public int CurrentWeekNumber {  get; set; }
         //private static bool isOnIndex;
+        private readonly UserManager<AppUser> _userManager;
 
-        public AppointmentsController(ClinicAppContext context)
+        public AppointmentsController(ClinicAppContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Appointments
@@ -390,6 +393,29 @@ namespace ClinicApp.Controllers
                 return RedirectToAction(nameof(AppointmentsListDoctor));
             }
             return View(appointment);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignUp(int? id)
+        {
+            if (id == null || _context.Appointment == null)
+            {
+                return NotFound();
+            }
+
+            var appointment = await _context.Appointment.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+            
+            AppUser? user = await _userManager.GetUserAsync(User);
+            
+            int? patientId = user.PatientId;
+            appointment.PatientId = patientId;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(AppointmentsListPatient));
         }
     }
 }

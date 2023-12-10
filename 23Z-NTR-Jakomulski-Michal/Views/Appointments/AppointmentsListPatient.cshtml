@@ -71,6 +71,18 @@
                     <td>
                         @item.StartTime.AddMinutes(Constants.MINUTES_VISIT).ToString(Constants.DATE_FORMAT)
                     </td>
+                    <td> 
+                        @if (item.PatientId == null)
+                        {
+                            <form method="post" asp-action="SignUp" asp-route-id="@item.Id">
+                                <button type="submit">Sign Up</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <p>Not available</p>
+                        }
+                    </td>
                     <td>
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                     </td>
