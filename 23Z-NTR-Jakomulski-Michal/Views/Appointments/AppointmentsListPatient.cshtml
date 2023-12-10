@@ -78,6 +78,12 @@
                                 <button type="submit">Sign Up</button>
                             </form>
                         }
+                        else if(item.PatientId == (int)(ViewBag.patientId))
+                        {
+                            <form method="post" asp-action="SignOut" asp-route-id="@item.Id">
+                                <button type="submit">Sign Out</button>
+                            </form>
+                        }
                         else
                         {
                             <p>Not available</p>

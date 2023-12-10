@@ -50,6 +50,8 @@ namespace ClinicApp.Controllers
         {
             PrepareViemVariables();
             var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
+            var user = await _userManager.GetUserAsync(User);
+            ViewBag.patientId = user.PatientId;
             return View(await clinicAppContext.ToListAsync());
         }
         [Authorize(Roles = "Doctor")]
@@ -413,6 +415,27 @@ namespace ClinicApp.Controllers
             
             int? patientId = user.PatientId;
             appointment.PatientId = patientId;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(AppointmentsListPatient));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignOut(int? id)
+        {
+            if (id == null || _context.Appointment == null)
+            {
+                return NotFound();
+            }
+
+            var appointment = await _context.Appointment.FindAsync(id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+
+            appointment.PatientId = null;
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(AppointmentsListPatient));
