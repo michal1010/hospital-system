@@ -17,6 +17,7 @@
         .ToList();
 
     var groupedAppointments = AppointmentsForCurrentWeek.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
+    string specializationFilter = "All";
 }
 
 <div>
@@ -24,6 +25,11 @@
     |
     <a asp-action="IncreaseNumberWeeksPatient">Next Week</a>
 </div>
+
+@* <div class="form-group">
+    <label class="control-label"></label>
+    <select asp-for="SpecializationFilter" class="form-control" asp-items="ViewBag.DoctorId"></select>
+</div> *@
 
 @foreach (var group in groupedAppointments)
 {
@@ -53,50 +59,56 @@
             </tr>
         </thead>
         <tbody>
+            
             @foreach (var item in group)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.Surname)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Doctor.Sepcialization)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartTime)
-                    </td>
-                    <td>
-                        @item.StartTime.AddMinutes(Constants.MINUTES_VISIT).ToString(Constants.DATE_FORMAT)
-                    </td>
-                    <td> 
-                        @if (item.PatientId == null)
-                        {
-                            <form method="post" asp-action="SignUp" asp-route-id="@item.Id">
-                                <button type="submit">Sign Up</button>
-                            </form>
-                        }
-                        else if(item.PatientId == (int)(ViewBag.patientId))
-                        {
-                            <form method="post" asp-action="SignOut" asp-route-id="@item.Id">
-                                <button type="submit">Sign Out</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <p>Not available</p>
-                        }
-                    </td>
-                    <td>
-                        @if (item.PatientId != null && item.PatientId == (int)(ViewBag.patientId))
-                        {
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                @if (item.Doctor.Sepcialization.ToString() == specializationFilter || specializationFilter == "All")
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Doctor.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Doctor.Surname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Doctor.Sepcialization)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartTime)
+                        </td>
+                        <td>
+                            @item.StartTime.AddMinutes(Constants.MINUTES_VISIT).ToString(Constants.DATE_FORMAT)
+                        </td>
+                        <td>
+                            @if (item.PatientId == null)
+                            {
+                                <form method="post" asp-action="SignUp" asp-route-id="@item.Id">
+                                    <button type="submit">Sign Up</button>
+                                </form>
+                            }
+                            else if (item.PatientId == (int)(ViewBag.patientId))
+                            {
+                                <form method="post" asp-action="SignOut" asp-route-id="@item.Id">
+                                    <button type="submit">Sign Out</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <p>Not available</p>
+                            }
+                        </td>
+                        <td>
+                            @if (item.PatientId != null && item.PatientId == (int)(ViewBag.patientId))
+                            {
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
 
-                        }
-                    </td>
-                </tr>
+                            }
+                        </td>
+                    </tr>
+
+                }
+              
             }
         </tbody>
     </table>
