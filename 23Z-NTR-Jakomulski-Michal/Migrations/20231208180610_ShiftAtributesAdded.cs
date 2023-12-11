@@ -31,7 +31,7 @@ namespace ClinicApp.Migrations
                 name: "FK_Shift_Patient_PatientId",
                 table: "Shift",
                 column: "PatientId",
-                principalTable: "Patient",
+                principalTable: "Pat",
                 principalColumn: "Id");
         }
 

@@ -61,7 +61,7 @@ namespace ClinicApp.Migrations
                     b.ToTable("Doctor");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
+            modelBuilder.Entity("ClinicApp.Models.Pat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -90,7 +90,7 @@ namespace ClinicApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patient");
+                    b.ToTable("Pat");
                 });
 #pragma warning restore 612, 618
         }

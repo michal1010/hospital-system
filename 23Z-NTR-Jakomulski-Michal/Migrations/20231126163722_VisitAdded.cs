@@ -32,7 +32,7 @@ namespace ClinicApp.Migrations
                     table.ForeignKey(
                         name: "FK_Visit_Patient_PatientId",
                         column: x => x.PatientId,
-                        principalTable: "Patient",
+                        principalTable: "Pat",
                         principalColumn: "Id");
                 });
 

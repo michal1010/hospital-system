@@ -174,7 +174,7 @@ namespace ClinicApp.Migrations
                     b.ToTable("Doctor");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
+            modelBuilder.Entity("ClinicApp.Models.Pat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,7 +204,7 @@ namespace ClinicApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patient");
+                    b.ToTable("Pat");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -346,13 +346,13 @@ namespace ClinicApp.Migrations
                         .WithOne("AppUser")
                         .HasForeignKey("ClinicApp.Models.AppUser", "DoctorId");
 
-                    b.HasOne("ClinicApp.Models.Patient", "Patient")
+                    b.HasOne("ClinicApp.Models.Pat", "Pat")
                         .WithOne("AppUser")
                         .HasForeignKey("ClinicApp.Models.AppUser", "PatientId");
 
                     b.Navigation("Doctor");
 
-                    b.Navigation("Patient");
+                    b.Navigation("Pat");
                 });
 
             modelBuilder.Entity("ClinicApp.Models.Appointment", b =>
@@ -363,13 +363,13 @@ namespace ClinicApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClinicApp.Models.Patient", "Patient")
+                    b.HasOne("ClinicApp.Models.Pat", "Pat")
                         .WithMany("Appointemts")
                         .HasForeignKey("PatientId");
 
                     b.Navigation("Doctor");
 
-                    b.Navigation("Patient");
+                    b.Navigation("Pat");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -430,7 +430,7 @@ namespace ClinicApp.Migrations
                     b.Navigation("Appointments");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
+            modelBuilder.Entity("ClinicApp.Models.Pat", b =>
                 {
                     b.Navigation("AppUser");
 

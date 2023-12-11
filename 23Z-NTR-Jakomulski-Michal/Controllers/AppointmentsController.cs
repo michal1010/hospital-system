@@ -52,7 +52,7 @@ namespace ClinicApp.Controllers
             ViewBag.doctorId = user.DoctorId;
         }
 
-        [Authorize(Roles = "Patient")]
+        [Authorize(Roles = "Pat")]
         public async Task<IActionResult> AppointmentsListPatient()
         {
             PrepareViemVariables();

@@ -55,7 +55,7 @@ public static class SeedData
         {
             await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Director.ToString()));
             await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Doctor.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Patient.ToString())); ;
+            await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Pat.ToString())); ;
         }
 
 

@@ -47,7 +47,7 @@ namespace ClinicApp.Migrations
                 name: "FK_AspNetUsers_Patient_PatientId",
                 table: "AspNetUsers",
                 column: "PatientId",
-                principalTable: "Patient",
+                principalTable: "Pat",
                 principalColumn: "Id");
         }
 

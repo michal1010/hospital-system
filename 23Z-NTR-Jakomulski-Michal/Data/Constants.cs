@@ -7,7 +7,7 @@
         public enum Roles
         {
             Director,
-            Patient,
+            Pat,
             Doctor
         }
     }
