@@ -90,7 +90,11 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+                        @if (item.PatientId != null && item.PatientId == (int)(ViewBag.patientId))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                        }
                     </td>
                 </tr>
             }

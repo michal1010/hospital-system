@@ -45,13 +45,19 @@ namespace ClinicApp.Controllers
             ViewBag.CurrentWeekNumber = Parameters.CurrentWeekNumber;
         }
 
+        private async Task PrepareViewBag()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            ViewBag.patientId = user.PatientId;
+            ViewBag.doctorId = user.DoctorId;
+        }
+
         [Authorize(Roles = "Patient")]
         public async Task<IActionResult> AppointmentsListPatient()
         {
             PrepareViemVariables();
             var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
-            var user = await _userManager.GetUserAsync(User);
-            ViewBag.patientId = user.PatientId;
+            await PrepareViewBag();
             return View(await clinicAppContext.ToListAsync());
         }
         [Authorize(Roles = "Doctor")]
@@ -59,6 +65,7 @@ namespace ClinicApp.Controllers
         {
             PrepareViemVariables();
             var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
+            await PrepareViewBag();
             return View(await clinicAppContext.ToListAsync());
         }
 
@@ -77,6 +84,7 @@ namespace ClinicApp.Controllers
             {
                 return NotFound();
             }
+            var user = await _userManager.GetUserAsync(User);
 
             return View(Appointment);
         }
