@@ -11,13 +11,14 @@ using System.Globalization;
 using Microsoft.AspNetCore.Authorization;
 using System.Numerics;
 using Microsoft.AspNetCore.Identity;
+using static ClinicApp.Models.Doctor;
 
 namespace ClinicApp.Controllers
 {
     public class AppointmentsController : Controller
     {
         private readonly ClinicAppContext _context;
-        public int CurrentWeekNumber {  get; set; }
+        public int CurrentWeekNumber { get; set; }
         //private static bool isOnIndex;
         private readonly UserManager<AppUser> _userManager;
 
@@ -28,7 +29,7 @@ namespace ClinicApp.Controllers
         }
 
         // GET: Appointments
-        [Authorize(Roles ="Director")]
+        [Authorize(Roles = "Director")]
         public async Task<IActionResult> Index()
         {
             PrepareViemVariables();
@@ -50,6 +51,8 @@ namespace ClinicApp.Controllers
             var user = await _userManager.GetUserAsync(User);
             ViewBag.patientId = user.PatientId;
             ViewBag.doctorId = user.DoctorId;
+            //ViewData["Specialization"] = "All";
+
         }
 
         [Authorize(Roles = "Pat")]
@@ -105,7 +108,7 @@ namespace ClinicApp.Controllers
         {
 
             if (ModelState.IsValid)
-            { 
+            {
                 _context.Add(Appointment);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -200,14 +203,14 @@ namespace ClinicApp.Controllers
             {
                 _context.Appointment.Remove(Appointment);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AppointmentExists(int id)
         {
-          return (_context.Appointment?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Appointment?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
         public IActionResult DecreaseNumberWeeks()
@@ -216,8 +219,8 @@ namespace ClinicApp.Controllers
 
             return RedirectToAction("Index");
         }
-        public IActionResult IncreaseNumberWeeks() 
-        { 
+        public IActionResult IncreaseNumberWeeks()
+        {
             Parameters.CurrentWeekNumber++;
 
             return RedirectToAction("Index");
@@ -226,14 +229,14 @@ namespace ClinicApp.Controllers
         public IActionResult DecreaseNumberWeeksPatient()
         {
             Parameters.CurrentWeekNumber--;
-         
+
 
             return RedirectToAction("AppointmentsListPatient");
         }
         public IActionResult IncreaseNumberWeeksPatient()
         {
             Parameters.CurrentWeekNumber++;
-            
+
 
             return RedirectToAction("AppointmentsListPatient");
         }
@@ -418,9 +421,9 @@ namespace ClinicApp.Controllers
             {
                 return NotFound();
             }
-            
+
             AppUser? user = await _userManager.GetUserAsync(User);
-            
+
             int? patientId = user.PatientId;
             appointment.PatientId = patientId;
             await _context.SaveChangesAsync();
@@ -448,5 +451,15 @@ namespace ClinicApp.Controllers
 
             return RedirectToAction(nameof(AppointmentsListPatient));
         }
+
+        public IActionResult ChoseSpecialization(string specialization)
+        {
+            
+            ViewBag.specialization = specialization;
+            return RedirectToAction(nameof(AppointmentsListPatient));
+        }
+
+        [BindProperty]
+        public string SpecializationFilter { get; set; }
     }
 }

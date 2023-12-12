@@ -17,7 +17,11 @@
         .ToList();
 
     var groupedAppointments = AppointmentsForCurrentWeek.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
-    string specializationFilter = "All";
+    string? spec;
+    if ((string?)ViewData["Specialization"] != null)
+        spec = (string?)ViewData["Specialization"];
+    else
+        spec = "All";
 }
 
 <div>
@@ -26,10 +30,17 @@
     <a asp-action="IncreaseNumberWeeksPatient">Next Week</a>
 </div>
 
-@* <div class="form-group">
-    <label class="control-label"></label>
-    <select asp-for="SpecializationFilter" class="form-control" asp-items="ViewBag.DoctorId"></select>
-</div> *@
+
+     
+// <div class="form-group">
+//     <form method="post" action="ChoseSpecialization">
+//         <label for="specialization">Enter something:</label>
+//         <select ></select>
+//         // <input id="specialization" name="specialization" type="text"/>
+//         // <button type="submit">Submit</button>
+//     </form>
+    
+// </div>
 
 @foreach (var group in groupedAppointments)
 {
@@ -62,7 +73,7 @@
             
             @foreach (var item in group)
             {
-                @if (item.Doctor.Sepcialization.ToString() == specializationFilter || specializationFilter == "All")
+                @if (item.Doctor.Sepcialization.ToString() == spec || spec == "All")
                 {
                     <tr>
                         <td>
