@@ -514,7 +514,7 @@ namespace ClinicApp.Controllers
             List<Doctor> doctors = await clinicAppDoctors.ToListAsync();
             PdfConverter pdf = new PdfConverter();
             pdf.GenerateRaport(start, end, doctors); // TODO: Why it can't be static?
-            DownloadReport();
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -533,6 +533,7 @@ namespace ClinicApp.Controllers
             PhysicalFileResult file = PhysicalFile(projectDir + "\\raport.pdf", System.Net.Mime.MediaTypeNames.Application.Pdf, "raport.pdf");
             if (System.IO.File.Exists(projectDir + "\\raport.pdf"))
             {
+                
                 return file;
             }
             else
