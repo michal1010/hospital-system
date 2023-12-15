@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Numerics;
 using Microsoft.AspNetCore.Identity;
 using static ClinicApp.Models.Doctor;
+using Microsoft.CodeAnalysis;
 
 namespace ClinicApp.Controllers
 {
@@ -46,6 +47,8 @@ namespace ClinicApp.Controllers
             ViewBag.StartWeek = startWeek.ToString("yyyy-MM-dd");
             ViewBag.EndWeek = endWeek.ToString("yyyy-MM-dd");
             ViewBag.CurrentWeekNumber = Parameters.CurrentWeekNumber;
+            ViewBag.Directory = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
+
         }
 
         private async Task PrepareViewBag()
@@ -487,6 +490,7 @@ namespace ClinicApp.Controllers
         {
          
             string? projectDir = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
+            //string projectDir = Microsoft.AspNetCore.Server.MapPath();
             PhysicalFileResult file = PhysicalFile(projectDir + "\\raport.pdf", System.Net.Mime.MediaTypeNames.Application.Pdf, "raport.pdf");
             if (System.IO.File.Exists(projectDir + "\\raport.pdf"))
             {

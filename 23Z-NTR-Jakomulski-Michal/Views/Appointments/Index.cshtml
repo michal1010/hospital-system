@@ -42,7 +42,11 @@
 </div>
 <div>
     <a asp-action="GeneratePdf">Generate pdf</a>
-    <a asp-action="DownloadReport">Download Report</a>
+    @if (System.IO.File.Exists((string)ViewBag.Directory + "\\raport.pdf"))
+    {
+        <a asp-action="DownloadReport">Download Report</a>
+
+    }
 </div>
 
 
