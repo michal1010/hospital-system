@@ -306,7 +306,7 @@ namespace ClinicApp.Controllers
                 await CreateAppointments(shift);
                 return RedirectToAction(nameof(Index));
             }
-            //ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "Email", Appointment.DoctorId);
+            ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "Email");
 
             return View();
         }
