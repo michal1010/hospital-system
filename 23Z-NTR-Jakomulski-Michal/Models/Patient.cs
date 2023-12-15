@@ -28,7 +28,7 @@ namespace ClinicApp.Models
         public bool IsAccountActive { get; set; }
         public AppUser? AppUser { get; set; }
 
-        public IEnumerable<Appointment>? Appointemts { get; set; }
+        public ICollection<Appointment>? Appointemts { get; set; }
 
     }
 }

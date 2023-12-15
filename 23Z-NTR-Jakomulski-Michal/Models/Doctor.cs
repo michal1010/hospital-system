@@ -40,6 +40,6 @@ namespace ClinicApp.Models
 
         public AppUser? AppUser { get; set; }
 
-        public IEnumerable<Appointment>? Appointments { get; set; }
+        public ICollection<Appointment>? Appointments { get; set; }
     }
 }
