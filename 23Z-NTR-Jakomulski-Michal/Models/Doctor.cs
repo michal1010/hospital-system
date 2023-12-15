@@ -41,5 +41,10 @@ namespace ClinicApp.Models
         public AppUser? AppUser { get; set; }
 
         public ICollection<Appointment>? Appointments { get; set; }
+
+        public override string ToString()
+        {
+            return Name + " " + Surname;
+        }
     }
 }
