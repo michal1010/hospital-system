@@ -13,7 +13,7 @@ namespace ClinicApp.Models
 
         [DataType(DataType.DateTime)]
         [DivisibleBy15(ErrorMessage = "Number of minutes must be divisible by 15.")]
-        [StartTimeBeforeEndTime("StartTime", ErrorMessage = "End time must not be earlier than start time.")]
+        //[StartTimeBeforeEndTime("StartTime", ErrorMessage = "End time must not be earlier than start time.")]
         public DateTime EndTime { get; set; }
     }
 }

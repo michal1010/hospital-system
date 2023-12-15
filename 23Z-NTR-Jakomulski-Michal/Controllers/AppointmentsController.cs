@@ -40,21 +40,26 @@ namespace ClinicApp.Controllers
             return View(await clinicAppContext.ToListAsync());
         }
 
-        //[Authorize(Roles = "Director")]
-        //public async Task<IActionResult> Index(Doctor.Sepecializations spec)
-        //{
-        //    PrepareViemVariables();
-        //    var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
-        //    return View(await clinicAppContext.ToListAsync());
-        //}
 
         private void PrepareViemVariables()
         {
+           
+            if (TempData.Keys.Contains("CurrentWeek"))
+                ViewBag.CurrentWeekNumber = TempData["CurrentWeek"] as int?;
+            else
+            {
+                int weekNuber = CurrentWeekNumber = CultureInfo.CurrentCulture.Calendar
+                                            .GetWeekOfYear(DateTime.Now,
+                                            CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+                ViewBag.CurrentWeekNumber = weekNuber;
+                TempData["CurrentWeek"] = weekNuber;
+            }
+            TempData["CurrentWeek"] = ViewBag.CurrentWeekNumber;
+
             DateTime startWeek, endWeek;
             GetWeekRange(out startWeek, out endWeek);
             ViewBag.StartWeek = startWeek.ToString("yyyy-MM-dd");
             ViewBag.EndWeek = endWeek.ToString("yyyy-MM-dd");
-            ViewBag.CurrentWeekNumber = Parameters.CurrentWeekNumber;
             ViewBag.Directory = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
 
         }
@@ -80,6 +85,7 @@ namespace ClinicApp.Controllers
             await PrepareViewBag();
             List<Appointment> appointments = await clinicAppContext.ToListAsync();
             TempData["Specialization"] = Specialization;
+           
             return View(appointments.Where(a => Enum.GetName(typeof(Doctor.Sepecializations), a.Doctor.Sepcialization) == Specialization || Specialization == "All"));
         }
         [Authorize(Roles = "Doctor")]
@@ -234,43 +240,56 @@ namespace ClinicApp.Controllers
 
         public IActionResult DecreaseNumberWeeks()
         {
-            Parameters.CurrentWeekNumber--;
+            int? cw = TempData["CurrentWeek"] as int?;
+            cw--;
+            TempData["CurrentWeek"] = cw;
 
             return RedirectToAction("Index");
         }
         public IActionResult IncreaseNumberWeeks()
         {
-            Parameters.CurrentWeekNumber++;
+            int? cw = TempData["CurrentWeek"] as int?;
+            cw++;
+            TempData["CurrentWeek"] = cw;
 
             return RedirectToAction("Index");
         }
 
         public IActionResult DecreaseNumberWeeksPatient()
         {
-            Parameters.CurrentWeekNumber--;
+            //Parameters.CurrentWeekNumber--;
             TempData["SpecializationNext"] = TempData["Specialization"] as string;
-
+            int? cw = TempData["CurrentWeek"] as int?;
+            cw--;
+            TempData["CurrentWeek"] = cw;
 
             return RedirectToAction("AppointmentsListPatient");
         }
         public IActionResult IncreaseNumberWeeksPatient()
         {
-            Parameters.CurrentWeekNumber++;
+            //Parameters.CurrentWeekNumber++;
             TempData["SpecializationNext"] = TempData["Specialization"] as string;
+            int? cw = TempData["CurrentWeek"] as int?;
+            cw++;
+            TempData["CurrentWeek"] = cw;
 
             return RedirectToAction("AppointmentsListPatient");
         }
 
         public IActionResult DecreaseNumberWeeksDoctor()
         {
-            Parameters.CurrentWeekNumber--;
+            int? cw = TempData["CurrentWeek"] as int?;
+            cw--;
+            TempData["CurrentWeek"] = cw;
 
 
             return RedirectToAction("AppointmentsListDoctor");
         }
         public IActionResult IncreaseNumberWeeksDoctor()
         {
-            Parameters.CurrentWeekNumber++;
+            int? cw = TempData["CurrentWeek"] as int?;
+            cw++;
+            TempData["CurrentWeek"] = cw;
 
 
             return RedirectToAction("AppointmentsListDoctor");
@@ -303,11 +322,11 @@ namespace ClinicApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private static void GetWeekRange(out DateTime startWeek, out DateTime endWeek)
+        private void GetWeekRange(out DateTime startWeek, out DateTime endWeek)
         {
             int year = DateTime.Now.Year;
             DateTime startYear = new DateTime(year, 1, 1);
-            int weekNumber = Parameters.CurrentWeekNumber;
+            int weekNumber = (int)ViewBag.CurrentWeekNumber;
             startWeek = startYear.AddDays((weekNumber - 1) * 7 -
                                                     (int)startYear.DayOfWeek + (int)DayOfWeek.Monday);
             endWeek = startWeek.AddDays(6);
