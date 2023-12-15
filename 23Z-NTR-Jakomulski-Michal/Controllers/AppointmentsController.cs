@@ -85,8 +85,11 @@ namespace ClinicApp.Controllers
             await PrepareViewBag();
             List<Appointment> appointments = await clinicAppContext.ToListAsync();
             TempData["Specialization"] = Specialization;
-           
-            return View(appointments.Where(a => Enum.GetName(typeof(Doctor.Sepecializations), a.Doctor.Sepcialization) == Specialization || Specialization == "All"));
+            var user = await _userManager.GetUserAsync(User);
+            appointments = appointments.Where(a => a.PatientId == null || a.PatientId == user.PatientId).ToList();
+            return View(appointments.Where(a => 
+            Enum.GetName(typeof(Doctor.Sepecializations), a.Doctor.Sepcialization) == Specialization || 
+            Specialization == "All"));
         }
         [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> AppointmentsListDoctor()
