@@ -29,7 +29,7 @@ public class PdfConverter
         }
     }
 
-    public  void GeneratePdf(Dictionary<Doctor, Tuple<TimeOnly, int>> data, string outputPath)
+    public  void GeneratePdf(Dictionary<Doctor, Tuple<TimeSpan, int>> data, string outputPath)
     {
         using (var writer = new PdfWriter(outputPath))
         {
@@ -40,11 +40,14 @@ public class PdfConverter
                 var document = new Document(pdf);
 
                 // Add content to the document from the IEnumerable collection
-                foreach (KeyValuePair<Doctor, Tuple<TimeOnly, int>> kvp in data)
+                foreach (KeyValuePair<Doctor, Tuple<TimeSpan, int>> kvp in data)
                 {
+                    int hours = (int)kvp.Value.Item1.TotalHours;
+                    int minutes = (int)kvp.Value.Item1.TotalMinutes - hours * 60;
                     StringBuilder stringBuilder = new StringBuilder();
                     stringBuilder.Append(kvp.Key.ToString()).Append(": total time = ")
-                                 .Append(kvp.Value.Item1.ToString(@"hh\:mm")).Append(" number of appointments = ")
+                                 .Append($"{hours} hours {minutes} minutes;")
+                                 .Append(" number of appointments = ")
                                  .Append(kvp.Value.Item2).AppendLine();
                     document.Add(new Paragraph(stringBuilder.ToString()));
                 }
@@ -54,10 +57,10 @@ public class PdfConverter
 
     public  void GenerateRaport(DateTime start, DateTime end, List<Doctor> doctors)
     {
-        Dictionary<Doctor, Tuple<TimeOnly, int>> doctorSummary = new Dictionary<Doctor, Tuple<TimeOnly, int>>();
+        Dictionary<Doctor, Tuple<TimeSpan, int>> doctorSummary = new Dictionary<Doctor, Tuple<TimeSpan, int>>();
         foreach(Doctor doctor in doctors)
         {
-            TimeOnly time = new TimeOnly(0);
+            TimeSpan time = TimeSpan.Zero;
             int nubmerOfAppointments = 0;
 
 
@@ -65,7 +68,7 @@ public class PdfConverter
                                                                             a.StartTime <= end).ToList();
             foreach(Appointment appointment in appointments)
             {
-                time.AddMinutes(15);
+                time += TimeSpan.FromMinutes(15);
                 nubmerOfAppointments++;
             }
             doctorSummary[doctor] = Tuple.Create(time, nubmerOfAppointments);
