@@ -355,7 +355,7 @@ namespace ClinicApp.Controllers
                 string appointementAfter = start.AddMinutes(minutesAfter).ToString("HH:mm");
 
                 // TODO: user define exception so I can return some arguemnts in the exception
-                throw new ArgumentException($"The Appointment can't be divided on appointments" +
+                throw new ArgumentException($"The shift can't be divided to appointments chose: " +
                                             $"{appointementBefore} or {appointementAfter}");
             }
 
