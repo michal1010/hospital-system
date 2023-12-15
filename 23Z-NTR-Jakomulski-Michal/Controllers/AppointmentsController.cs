@@ -40,6 +40,14 @@ namespace ClinicApp.Controllers
             return View(await clinicAppContext.ToListAsync());
         }
 
+        //[Authorize(Roles = "Director")]
+        //public async Task<IActionResult> Index(Doctor.Sepecializations spec)
+        //{
+        //    PrepareViemVariables();
+        //    var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
+        //    return View(await clinicAppContext.ToListAsync());
+        //}
+
         private void PrepareViemVariables()
         {
             DateTime startWeek, endWeek;
@@ -61,7 +69,7 @@ namespace ClinicApp.Controllers
         }
 
         [Authorize(Roles = "Pat")]
-        public async Task<IActionResult> AppointmentsListPatient()
+        public async Task<IActionResult> AppointmentsListPatient(string Specialization)
         {
             PrepareViemVariables();
             var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
@@ -501,9 +509,6 @@ namespace ClinicApp.Controllers
                 ViewBag.FileNotFound = true;
                 return RedirectToAction(nameof(Index));
             }
-            
-          
-            
            
         }
 

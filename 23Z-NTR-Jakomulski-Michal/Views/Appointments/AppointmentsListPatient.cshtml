@@ -22,6 +22,14 @@
         spec = (string?)ViewData["Specialization"];
     else
         spec = "All";
+
+    List<string> specializationList = Enum.GetValues(typeof(Doctor.Sepecializations))
+                                            .Cast<Doctor.Sepecializations>()
+                                            .Select(s => s.ToString())
+                                            .ToList();
+
+    specializationList.Add("All");
+    var selectSpec = new SelectList(specializationList);
 }
 
 <div>
@@ -32,15 +40,26 @@
 
 
      
-// <div class="form-group">
-//     <form method="post" action="ChoseSpecialization">
-//         <label for="specialization">Enter something:</label>
-//         <select ></select>
-//         // <input id="specialization" name="specialization" type="text"/>
-//         // <button type="submit">Submit</button>
-//     </form>
-    
-// </div>
+
+
+@using (Html.BeginForm("AppointmentsListPatient", "Appointments", FormMethod.Get))
+{
+
+    <fieldset>
+
+        Movie Type
+        
+        @Html.DropDownList("Specialization", selectSpec)
+
+        <p>
+
+            <input type="submit" value="Submit" />
+
+        </p>
+
+    </fieldset>
+
+}
 
 @foreach (var group in groupedAppointments)
 {
