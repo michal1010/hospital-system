@@ -69,12 +69,15 @@ namespace ClinicApp.Controllers
         }
 
         [Authorize(Roles = "Pat")]
-        public async Task<IActionResult> AppointmentsListPatient(string Specialization)
+        public async Task<IActionResult> AppointmentsListPatient(string Specialization="All")
         {
             PrepareViemVariables();
             var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
             await PrepareViewBag();
-            return View(await clinicAppContext.ToListAsync());
+            List<Appointment> appointments = await clinicAppContext.ToListAsync();
+            ViewBag.Specializatin = Specialization;
+            return View(appointments.Where(a => Enum.GetName(typeof(Doctor.Sepecializations), a.Doctor.Sepcialization) == Specialization || Specialization == "All"));
+
         }
         [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> AppointmentsListDoctor()
