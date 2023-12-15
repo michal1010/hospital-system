@@ -29,7 +29,7 @@ public class PdfConverter
         }
     }
 
-    public  void GeneratePdf(Dictionary<Doctor, Tuple<TimeSpan, int>> data, string outputPath)
+    public  void GeneratePdf(Dictionary<Doctor, Tuple<TimeSpan, int>> data, string outputPath, DateOnly start, DateOnly end)
     {
         using (var writer = new PdfWriter(outputPath))
         {
@@ -40,6 +40,7 @@ public class PdfConverter
                 var document = new Document(pdf);
 
                 // Add content to the document from the IEnumerable collection
+                document.Add(new Paragraph($"{start.ToString()} - {end.ToString()}"));
                 foreach (KeyValuePair<Doctor, Tuple<TimeSpan, int>> kvp in data)
                 {
                     int hours = (int)kvp.Value.Item1.TotalHours;
@@ -55,7 +56,7 @@ public class PdfConverter
         }
     }
 
-    public  void GenerateRaport(DateTime start, DateTime end, List<Doctor> doctors)
+    public  void GenerateRaport(DateOnly start, DateOnly end, List<Doctor> doctors)
     {
         Dictionary<Doctor, Tuple<TimeSpan, int>> doctorSummary = new Dictionary<Doctor, Tuple<TimeSpan, int>>();
         foreach(Doctor doctor in doctors)
@@ -64,8 +65,8 @@ public class PdfConverter
             int nubmerOfAppointments = 0;
 
 
-            List<Appointment> appointments = doctor.Appointments.Where(a => a.StartTime >= start&& 
-                                                                            a.StartTime <= end).ToList();
+            List<Appointment> appointments = doctor.Appointments.Where(a => a.StartTime >= start.ToDateTime(new TimeOnly(0, 0)) && 
+                                                                            a.StartTime <= end.ToDateTime(new TimeOnly(0, 0))).ToList();
             foreach(Appointment appointment in appointments)
             {
                 time += TimeSpan.FromMinutes(15);
@@ -74,7 +75,7 @@ public class PdfConverter
             doctorSummary[doctor] = Tuple.Create(time, nubmerOfAppointments);
         }
 
-        GeneratePdf(doctorSummary, "raport.pdf");
+        GeneratePdf(doctorSummary, "raport.pdf", start, end);
     }
 
     //private List<Doc>

@@ -91,6 +91,7 @@ namespace ClinicApp.Controllers
             Enum.GetName(typeof(Doctor.Sepecializations), a.Doctor.Sepcialization) == Specialization || 
             Specialization == "All"));
         }
+
         [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> AppointmentsListDoctor()
         {
@@ -268,6 +269,7 @@ namespace ClinicApp.Controllers
 
             return RedirectToAction("AppointmentsListPatient");
         }
+
         public IActionResult IncreaseNumberWeeksPatient()
         {
             //Parameters.CurrentWeekNumber++;
