@@ -22,6 +22,14 @@
     var groupedAppointments = AppointmentsForCurrentWeek.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
 }
 
+@if (ViewBag.FileNotFound != null && (bool)ViewBag.FileNotFound)
+{
+    <script>
+        alert("Script has not been generated yet.");
+    </script>
+}
+
+
 <div>
     <a asp-action="DecreaseNumberWeeks">Previous Week</a>
     |
@@ -34,9 +42,10 @@
 </div>
 <div>
     <a asp-action="GeneratePdf">Generate pdf</a>
-   
-   
+    <a asp-action="DownloadReport">Download Report</a>
 </div>
+
+
 
 
 @foreach(var group in groupedAppointments)

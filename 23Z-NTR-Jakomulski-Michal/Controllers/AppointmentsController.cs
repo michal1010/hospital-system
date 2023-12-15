@@ -18,14 +18,16 @@ namespace ClinicApp.Controllers
     public class AppointmentsController : Controller
     {
         private readonly ClinicAppContext _context;
+        private readonly IConfiguration _configuration;
         public int CurrentWeekNumber { get; set; }
         //private static bool isOnIndex;
         private readonly UserManager<AppUser> _userManager;
 
-        public AppointmentsController(ClinicAppContext context, UserManager<AppUser> userManager)
+        public AppointmentsController(ClinicAppContext context, UserManager<AppUser> userManager, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         // GET: Appointments
@@ -470,12 +472,35 @@ namespace ClinicApp.Controllers
             List<Doctor> doctors = await clinicAppDoctors.ToListAsync();
             PdfConverter pdf = new PdfConverter();
             pdf.GenerateRaport(start, end, doctors); // TODO: Why it can't be static?
+            DownloadReport();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         public IActionResult GeneratePdf()
         {
             return View();
+        }
+
+        public IActionResult DownloadReport()
+        {
+         
+            string? projectDir = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
+            PhysicalFileResult file = PhysicalFile(projectDir + "\\raport.pdf", System.Net.Mime.MediaTypeNames.Application.Pdf, "raport.pdf");
+            if (System.IO.File.Exists(projectDir + "\\raport.pdf"))
+            {
+                return file;
+            }
+            else
+            {
+                ViewBag.FileNotFound = true;
+                return RedirectToAction(nameof(Index));
+            }
+            
+          
+            
+           
         }
 
  
