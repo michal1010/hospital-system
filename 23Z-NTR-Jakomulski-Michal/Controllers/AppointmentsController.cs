@@ -69,15 +69,18 @@ namespace ClinicApp.Controllers
         }
 
         [Authorize(Roles = "Pat")]
-        public async Task<IActionResult> AppointmentsListPatient(string Specialization="All")
+        public async Task<IActionResult> AppointmentsListPatient(string? Specialization="All")
         {
+            if (TempData.Keys.Contains("SpecializationNext"))
+            {
+                Specialization = TempData["SpecializationNext"] as string;
+            }
             PrepareViemVariables();
             var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
             await PrepareViewBag();
             List<Appointment> appointments = await clinicAppContext.ToListAsync();
-            ViewBag.Specializatin = Specialization;
+            TempData["Specialization"] = Specialization;
             return View(appointments.Where(a => Enum.GetName(typeof(Doctor.Sepecializations), a.Doctor.Sepcialization) == Specialization || Specialization == "All"));
-
         }
         [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> AppointmentsListDoctor()
@@ -245,6 +248,7 @@ namespace ClinicApp.Controllers
         public IActionResult DecreaseNumberWeeksPatient()
         {
             Parameters.CurrentWeekNumber--;
+            TempData["SpecializationNext"] = TempData["Specialization"] as string;
 
 
             return RedirectToAction("AppointmentsListPatient");
@@ -252,7 +256,7 @@ namespace ClinicApp.Controllers
         public IActionResult IncreaseNumberWeeksPatient()
         {
             Parameters.CurrentWeekNumber++;
-
+            TempData["SpecializationNext"] = TempData["Specialization"] as string;
 
             return RedirectToAction("AppointmentsListPatient");
         }
@@ -312,7 +316,7 @@ namespace ClinicApp.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateShift([Bind("DoctorId,StartTime,EndTime")] Shift shift)
         {
-            if (ModelState.IsValid) // TODO: Why ModelState.IsValid is always false here????
+            if (ModelState.IsValid)
             {
                 await CreateAppointments(shift);
                 return RedirectToAction(nameof(Index));
