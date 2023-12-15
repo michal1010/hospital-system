@@ -21,7 +21,7 @@ namespace ClinicApp.Controllers
         private readonly ClinicAppContext _context;
         private readonly IConfiguration _configuration;
         public int CurrentWeekNumber { get; set; }
-        //private static bool isOnIndex;
+
         private readonly UserManager<AppUser> _userManager;
 
         public AppointmentsController(ClinicAppContext context, UserManager<AppUser> userManager, IConfiguration configuration)
@@ -529,7 +529,7 @@ namespace ClinicApp.Controllers
         {
          
             string? projectDir = _configuration.GetValue<string>(WebHostDefaults.ContentRootKey);
-            //string projectDir = Microsoft.AspNetCore.Server.MapPath();
+
             PhysicalFileResult file = PhysicalFile(projectDir + "\\raport.pdf", System.Net.Mime.MediaTypeNames.Application.Pdf, "raport.pdf");
             if (System.IO.File.Exists(projectDir + "\\raport.pdf"))
             {

@@ -17,11 +17,7 @@
         .ToList();
 
     var groupedAppointments = AppointmentsForCurrentWeek.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
-    string? spec;
-    if ((string?)ViewData["Specialization"] != null)
-        spec = (string?)ViewData["Specialization"];
-    else
-        spec = "All";
+  
 
     List<string> specializationList = Enum.GetValues(typeof(Doctor.Sepecializations))
                                             .Cast<Doctor.Sepecializations>()
