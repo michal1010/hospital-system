@@ -294,9 +294,9 @@ namespace ClinicApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateShift([Bind("Id,DoctorId,StartTime,EndTime")] Shift shift)
+        public async Task<IActionResult> CreateShift([Bind("DoctorId,StartTime,EndTime")] Shift shift)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) // TODO: Why ModelState.IsValid is always false here????
             {
                 await CreateAppointments(shift);
                 return RedirectToAction(nameof(Index));
@@ -320,7 +320,7 @@ namespace ClinicApp.Controllers
                     {
                         DoctorId = doctorId,
                         StartTime = appointemntStart
-                    }); ;
+                    });
                     appointemntStart = appointemntStart.AddMinutes(15);
                 }
             }
@@ -459,7 +459,25 @@ namespace ClinicApp.Controllers
             return RedirectToAction(nameof(AppointmentsListPatient));
         }
 
-        [BindProperty]
-        public string SpecializationFilter { get; set; }
+
+
+        [HttpPost]
+        public async Task<IActionResult> GeneratePdf([Bind("StartTime, EndTime")] PdfScope pdfScope)
+        {
+            var start = pdfScope.StartTime;
+            var end = pdfScope.EndTime;
+            var clinicAppDoctors = _context.Doctor.Include(s => s.Appointments);
+            List<Doctor> doctors = await clinicAppDoctors.ToListAsync();
+            PdfConverter pdf = new PdfConverter();
+            pdf.GenerateRaport(start, end, doctors); // TODO: Why it can't be static?
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult GeneratePdf()
+        {
+            return View();
+        }
+
+ 
     }
 }

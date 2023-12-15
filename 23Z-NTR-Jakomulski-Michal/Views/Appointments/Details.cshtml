@@ -30,6 +30,16 @@
         <dd class = "col-sm-10">
             @Model.StartTime.AddMinutes(Constants.MINUTES_VISIT).ToString(Constants.DATE_FORMAT)
         </dd>
+        @if(Model.Patient != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Patient)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Patient.Surname)
+            </dd>
+        }
+        
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 using ClinicApp.Data;
 
@@ -7,8 +8,12 @@ namespace ClinicApp.Models
     public class Appointment
     {
         public int Id { get; set; }
+
+        [ForeignKey(nameof(DoctorId))]
         public Doctor? Doctor { get; set; }
         public int DoctorId { get; set; }
+
+        [ForeignKey(nameof(PatientId))]
         public Patient? Patient { get; set; }
         public int? PatientId { get; set; }
         public string? Description { get; set; }
@@ -23,7 +28,7 @@ namespace ClinicApp.Models
             sb.Append("Doctor:").Append(Doctor.Name).Append(" ").
                 Append(Doctor.Surname).Append(" Date").Append(StartTime);
 
-            if (PatientId != null)
+            if (Patient != null)
             {
                 sb.Append(" Patient").Append(Patient.Name).Append(" ").Append(Patient.Surname);
             }
