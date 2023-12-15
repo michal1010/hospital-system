@@ -88,8 +88,7 @@
             
             @foreach (var item in group)
             {
-                @if (item.Doctor.Sepcialization.ToString() == spec || spec == "All")
-                {
+                
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.Doctor.Name)
@@ -133,7 +132,7 @@
                         </td>
                     </tr>
 
-                }
+                
               
             }
         </tbody>

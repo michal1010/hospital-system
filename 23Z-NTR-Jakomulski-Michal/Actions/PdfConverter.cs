@@ -66,7 +66,8 @@ public class PdfConverter
 
 
             List<Appointment> appointments = doctor.Appointments.Where(a => a.StartTime >= start.ToDateTime(new TimeOnly(0, 0)) && 
-                                                                            a.StartTime <= end.ToDateTime(new TimeOnly(0, 0))).ToList();
+                                                                            a.StartTime <= end.ToDateTime(new TimeOnly(0, 0)) &&
+                                                                            a.PatientId != null).ToList();
             foreach(Appointment appointment in appointments)
             {
                 time += TimeSpan.FromMinutes(15);
