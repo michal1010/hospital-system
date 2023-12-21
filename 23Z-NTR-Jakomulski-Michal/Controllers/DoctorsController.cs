@@ -128,38 +128,56 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Sepcialization,Email,Password")] Doctor doctor)
+        public async Task<IActionResult> Edit(int id, byte[] rowVersion)
         {
-            if (id != doctor.Id)
+
+
+            var doctorToUpdate = await _context.Doctor.FirstOrDefaultAsync(d => d.Id == id);
+
+            if (doctorToUpdate == null)
             {
-                return NotFound();
+                Doctor deletedDoctor = new Doctor();
+                await TryUpdateModelAsync(deletedDoctor);
+                ModelState.AddModelError(string.Empty,
+                    "Unable to save changes. The department was deleted by another user.");
+                return View(deletedDoctor);
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(doctorToUpdate).Property("RowVersion").OriginalValue = rowVersion;
+            Doctor? concurrencyDoctor = doctorToUpdate;
+            if ( await TryUpdateModelAsync<Doctor>(doctorToUpdate,
+                "",
+                d => d.Name, d => d.Surname, d => d.Sepcialization, d => d.Email, d => d.Password))
             {
                 try
                 {
-                    var user = await _context.Users.FirstOrDefaultAsync<AppUser>(m => m.DoctorId == id );
+                    var user = await _context.Users.FirstOrDefaultAsync<AppUser>(m => m.DoctorId == id);
 
-                    _context.Update(doctor);
                     await _context.SaveChangesAsync();
-                    
-                    await _userManager.UpdateAsync(UserFromDoctorUpdate(doctor, user));
+                    await _userManager.UpdateAsync(UserFromDoctorUpdate(doctorToUpdate, user));
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex) 
                 {
-                    if (!DoctorExists(doctor.Id))
+                    var exceptionEntry = ex.Entries.Single();
+                    var clientValues = (Doctor)exceptionEntry.Entity;
+                    var databaseEntry = exceptionEntry.GetDatabaseValues();
+                    if (databaseEntry == null)
                     {
-                        return NotFound();
+                        ModelState.AddModelError(string.Empty,
+                            "Unable to save changes. The department was deleted by another user.");
                     }
                     else
                     {
-                        throw;
+                        concurrencyDoctor = (Doctor)databaseEntry.ToObject();
+                        ModelState.AddModelError(string.Empty, "Data has been changed during your action. The newest version of data has been uploaded");
+                        doctorToUpdate.RowVersion = (byte[])concurrencyDoctor.RowVersion;
+                        ModelState.Remove("RowVersion");
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(doctor);
+
+            return View(concurrencyDoctor);
         }
 
         // GET: Doctors/Delete/5
