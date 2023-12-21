@@ -42,6 +42,9 @@ namespace ClinicApp.Models
 
         public ICollection<Appointment>? Appointments { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
         public override string ToString()
         {
             return Name + " " + Surname;

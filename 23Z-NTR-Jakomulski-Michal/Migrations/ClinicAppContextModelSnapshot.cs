@@ -162,6 +162,12 @@ namespace ClinicApp.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<int>("Sepcialization")
                         .HasColumnType("int");
 
@@ -174,7 +180,7 @@ namespace ClinicApp.Migrations
                     b.ToTable("Doctor");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Pat", b =>
+            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -204,7 +210,7 @@ namespace ClinicApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Pat");
+                    b.ToTable("Patient");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -346,13 +352,13 @@ namespace ClinicApp.Migrations
                         .WithOne("AppUser")
                         .HasForeignKey("ClinicApp.Models.AppUser", "DoctorId");
 
-                    b.HasOne("ClinicApp.Models.Pat", "Pat")
+                    b.HasOne("ClinicApp.Models.Patient", "Patient")
                         .WithOne("AppUser")
                         .HasForeignKey("ClinicApp.Models.AppUser", "PatientId");
 
                     b.Navigation("Doctor");
 
-                    b.Navigation("Pat");
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("ClinicApp.Models.Appointment", b =>
@@ -363,13 +369,13 @@ namespace ClinicApp.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClinicApp.Models.Pat", "Pat")
+                    b.HasOne("ClinicApp.Models.Patient", "Patient")
                         .WithMany("Appointemts")
                         .HasForeignKey("PatientId");
 
                     b.Navigation("Doctor");
 
-                    b.Navigation("Pat");
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -430,7 +436,7 @@ namespace ClinicApp.Migrations
                     b.Navigation("Appointments");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Pat", b =>
+            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
                 {
                     b.Navigation("AppUser");
 
