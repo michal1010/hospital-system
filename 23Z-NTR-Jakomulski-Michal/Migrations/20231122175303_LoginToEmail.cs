@@ -12,7 +12,7 @@ namespace ClinicApp.Migrations
         {
             migrationBuilder.RenameColumn(
                 name: "Login",
-                table: "Patient",
+                table: "Pat",
                 newName: "Email");
 
             migrationBuilder.RenameColumn(
@@ -22,7 +22,7 @@ namespace ClinicApp.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Password",
-                table: "Patient",
+                table: "Pat",
                 type: "nvarchar(100)",
                 maxLength: 100,
                 nullable: false,
@@ -80,7 +80,7 @@ namespace ClinicApp.Migrations
         {
             migrationBuilder.RenameColumn(
                 name: "Email",
-                table: "Patient",
+                table: "Pat",
                 newName: "Login");
 
             migrationBuilder.RenameColumn(
@@ -90,7 +90,7 @@ namespace ClinicApp.Migrations
 
             migrationBuilder.AlterColumn<string>(
                 name: "Password",
-                table: "Patient",
+                table: "Pat",
                 type: "nvarchar(max)",
                 nullable: false,
                 oldClrType: typeof(string),

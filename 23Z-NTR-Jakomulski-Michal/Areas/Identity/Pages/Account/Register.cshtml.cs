@@ -134,7 +134,7 @@ namespace ClinicApp.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
-                    await _userManager.AddToRoleAsync(user, Parameters.Roles.Patient.ToString());
+                    //await _userManager.AddToRoleAsync(user, Constants.Roles.Pat.ToString());
                     Patient patient = new Patient
                     {
                         Name = Input.Name,
@@ -144,6 +144,8 @@ namespace ClinicApp.Areas.Identity.Pages.Account
                     };
                     _context.Add<Patient>(patient);
                     _context.SaveChanges();
+                    user.PatientId = patient.Id;
+                    await _userManager.UpdateAsync(user);
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);

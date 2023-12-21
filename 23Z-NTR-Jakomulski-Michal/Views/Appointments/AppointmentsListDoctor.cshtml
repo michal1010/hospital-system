@@ -1,32 +1,38 @@
 ﻿@using System.Globalization;
-@model IEnumerable<ClinicApp.Models.Shift>
+@using ClinicApp.Data;
+@model IEnumerable<ClinicApp.Models.Appointment>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "AppointmentsListDoctor";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Shifts</h1>
+<h1>Appointments</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 @{
     int currentWeekNumber = ViewBag.CurrentWeekNumber;
-    var shiftsForCurrentWeek = Model
+    var AppointmentsForCurrentWeek = Model
         .Where(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday) == currentWeekNumber)
         .OrderBy(item => item.StartTime)
         .ToList();
 
-    var groupedShifts = shiftsForCurrentWeek.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
+    var groupedAppointments = AppointmentsForCurrentWeek.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
 }
-@foreach(var group in groupedShifts)
+
+<div>
+    <a asp-action="DecreaseNumberWeeksDoctor">Previous Week</a>
+    |
+    <a asp-action="IncreaseNumberWeeksDoctor">Next Week</a>
+</div>
+
+
+@foreach (var group in groupedAppointments)
 {
     <table class="table">
         <thead>
             <tr>
                 <th>@(ViewBag.StartWeek) - @(ViewBag.EndWeek)</th>
-               
+
             </tr>
             <tr>
                 <th>
@@ -64,13 +70,16 @@
                         @Html.DisplayFor(modelItem => item.StartTime)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EndTime)
+                        @item.StartTime.AddMinutes(Constants.MINUTES_VISIT).ToString(Constants.DATE_FORMAT)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        @if (item.DoctorId != null && item.DoctorId == (int)(ViewBag.doctorId))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                            <a asp-action="AddDescription" asp-route-id="@item.Id">Add description</a>
+                        }
                     </td>
+                    
                 </tr>
             }
         </tbody>
@@ -78,14 +87,3 @@
 
 }
 
-<div>
-    <a asp-action="DecreaseNumberWeeks" >Previous Week</a>
-    |
-    <a asp-action="IncreaseNumberWeeks" >Next Week</a>
-</div>
-<div>
-    <a asp-action="CopyPreviosWeek">Copy this week</a>
-</div>
-<p>
-    <a href="@Url.Action("Index", "Director")">Back</a>
-</p>

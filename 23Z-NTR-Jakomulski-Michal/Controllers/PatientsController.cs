@@ -31,7 +31,7 @@ namespace ClinicApp.Controllers
         {
               return _context.Patient != null ? 
                           View(await _context.Patient.ToListAsync()) :
-                          Problem("Entity set 'ClinicAppContext.Patient'  is null.");
+                          Problem("Entity set 'ClinicAppContext.Pat'  is null.");
         }
 
         // GET: Patients/Details/5
@@ -71,8 +71,7 @@ namespace ClinicApp.Controllers
                 await _context.SaveChangesAsync();
                 var user = UserFromPatientCreate(patient);
                 var result = await _userManager.CreateAsync(user, patient.Password);
-                await _userManager.AddToRoleAsync(user, Parameters.Roles.Patient.ToString());
-
+                await _userManager.AddToRoleAsync(user, Constants.Roles.Pat.ToString());
                 return RedirectToAction(nameof(Index));
             }
             return View(patient);
@@ -158,7 +157,7 @@ namespace ClinicApp.Controllers
         {
             if (_context.Patient == null)
             {
-                return Problem("Entity set 'ClinicAppContext.Patient'  is null.");
+                return Problem("Entity set 'ClinicAppContext.Pat'  is null.");
             }
             var patient = await _context.Patient.FindAsync(id);
             var user = await _userManager.FindByEmailAsync(patient.Email);
@@ -203,6 +202,29 @@ namespace ClinicApp.Controllers
             user.PhoneNumberConfirmed = true;
             user.Patient = patient;
             return user;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ActivateAccount(int? id)
+        {
+
+            if (id == null || _context.Patient == null)
+            {
+                return NotFound();
+            }
+
+            var patient = await _context.Patient.FindAsync(id);
+            if (patient == null)
+            {
+                return NotFound();
+            }
+            patient.IsAccountActive = true;
+            AppUser? user = await _userManager.FindByEmailAsync(patient.Email);
+
+            await _userManager.AddToRoleAsync(user, Constants.Roles.Pat.ToString());
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+           
         }
     }
 }

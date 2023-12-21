@@ -8,7 +8,16 @@ builder.Services.AddDbContext<ClinicAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ClinicAppContext") ?? 
                         throw new InvalidOperationException("Connection string 'ClinicAppContext' not found.")));
 
-//builder.Services.AddDefaultIdentity<AppUser, Ide>
+builder.Services.AddDistributedMemoryCache();
+
+builder.Services.AddSession(options =>
+{
+    //options.IdleTimeout = TimeSpan.FromSeconds(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+
 builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
         .AddEntityFrameworkStores<ClinicAppContext>()
         .AddDefaultUI()

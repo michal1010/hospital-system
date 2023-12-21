@@ -1,0 +1,54 @@
+﻿@using ClinicApp.Data;
+@model ClinicApp.Models.Appointment
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Appointment</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Doctor)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Doctor.Email)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+        <dt class = "col-sm-2">
+            End Time
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.StartTime.AddMinutes(Constants.MINUTES_VISIT).ToString(Constants.DATE_FORMAT)
+        </dd>
+        @if(Model.Patient != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Patient)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Patient.Surname)
+            </dd>
+        }
+        
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

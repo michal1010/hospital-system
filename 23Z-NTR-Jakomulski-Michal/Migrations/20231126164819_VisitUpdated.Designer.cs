@@ -148,7 +148,7 @@ namespace ClinicApp.Migrations
                     b.ToTable("Doctor");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
+            modelBuilder.Entity("ClinicApp.Models.Pat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -178,7 +178,7 @@ namespace ClinicApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patient");
+                    b.ToTable("Pat");
                 });
 
             modelBuilder.Entity("ClinicApp.Models.Visit", b =>
@@ -349,13 +349,13 @@ namespace ClinicApp.Migrations
                         .WithOne("AppUser")
                         .HasForeignKey("ClinicApp.Models.AppUser", "DoctorId");
 
-                    b.HasOne("ClinicApp.Models.Patient", "Patient")
+                    b.HasOne("ClinicApp.Models.Pat", "Pat")
                         .WithOne("AppUser")
                         .HasForeignKey("ClinicApp.Models.AppUser", "PatientId");
 
                     b.Navigation("Doctor");
 
-                    b.Navigation("Patient");
+                    b.Navigation("Pat");
                 });
 
             modelBuilder.Entity("ClinicApp.Models.Visit", b =>
@@ -364,11 +364,11 @@ namespace ClinicApp.Migrations
                         .WithMany()
                         .HasForeignKey("DoctorId");
 
-                    b.HasOne("ClinicApp.Models.Patient", "Patient")
+                    b.HasOne("ClinicApp.Models.Pat", "Pat")
                         .WithMany()
                         .HasForeignKey("PatientId");
 
-                    b.Navigation("Patient");
+                    b.Navigation("Pat");
 
                     b.Navigation("doctor");
                 });
@@ -429,7 +429,7 @@ namespace ClinicApp.Migrations
                     b.Navigation("AppUser");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
+            modelBuilder.Entity("ClinicApp.Models.Pat", b =>
                 {
                     b.Navigation("AppUser");
                 });

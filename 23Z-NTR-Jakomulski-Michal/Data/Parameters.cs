@@ -1,13 +1,14 @@
 ﻿using System.Globalization;
 
-namespace ClinicApp.Models
+namespace ClinicApp.Data
 {
     public record Parameters
-    {
+    { 
+
         private static Parameters? _instance;
         public static Parameters GetInstance()
         {
-            if(_instance == null)
+            if (_instance == null)
                 _instance = new Parameters();
             return _instance;
         }
@@ -19,12 +20,6 @@ namespace ClinicApp.Models
                                             CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
         public static int CurrentWeekNumber { get; set; }
-
-        public enum Roles
-        {
-            Director,
-            Patient,
-            Doctor
-        }
+  
     }
 }

@@ -1,0 +1,141 @@
+﻿@using System.Globalization;
+@using ClinicApp.Data;
+@model IEnumerable<ClinicApp.Models.Appointment>
+
+@{
+    ViewData["Title"] = "AppointmentsListPatient";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Appointments</h1>
+
+@{
+    int currentWeekNumber = ViewBag.CurrentWeekNumber;
+    var AppointmentsForCurrentWeek = Model
+        .Where(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday) == currentWeekNumber)
+        .OrderBy(item => item.StartTime)
+        .ToList();
+
+    var groupedAppointments = AppointmentsForCurrentWeek.GroupBy(item => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(item.StartTime, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday));
+  
+
+    List<string> specializationList = Enum.GetValues(typeof(Doctor.Sepecializations))
+                                            .Cast<Doctor.Sepecializations>()
+                                            .Select(s => s.ToString())
+                                            .ToList();
+
+    specializationList.Add("All");
+    var selectSpec = new SelectList(specializationList);
+}
+
+<div>
+    <a asp-action="DecreaseNumberWeeksPatient">Previous Week</a>
+    |
+    <a asp-action="IncreaseNumberWeeksPatient">Next Week</a>
+</div>
+
+
+     
+
+
+@using (Html.BeginForm("AppointmentsListPatient", "Appointments", FormMethod.Get))
+{
+
+    <fieldset>
+
+        Movie Type
+        
+        @Html.DropDownList("Specialization", selectSpec)
+
+        <p>
+
+            <input type="submit" value="Submit" />
+
+        </p>
+
+    </fieldset>
+
+}
+
+@foreach (var group in groupedAppointments)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>@(ViewBag.StartWeek) - @(ViewBag.EndWeek)</th>
+
+            </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Doctor.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Doctor.Surname)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model=> model.Doctor.Sepcialization)
+                </th>
+                <th>
+                    Start time
+                </th>
+                <th>
+                    End time
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            @foreach (var item in group)
+            {
+                
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Doctor.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Doctor.Surname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Doctor.Sepcialization)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartTime)
+                        </td>
+                        <td>
+                            @item.StartTime.AddMinutes(Constants.MINUTES_VISIT).ToString(Constants.DATE_FORMAT)
+                        </td>
+                        <td>
+                            @if (item.PatientId == null)
+                            {
+                                <form method="post" asp-action="SignUp" asp-route-id="@item.Id">
+                                    <button type="submit">Sign Up</button>
+                                </form>
+                            }
+                            else if (item.PatientId == (int)(ViewBag.patientId))
+                            {
+                                <form method="post" asp-action="SignOut" asp-route-id="@item.Id">
+                                    <button type="submit">Sign Out</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <p>Not available</p>
+                            }
+                        </td>
+                        <td>
+                            @if (item.PatientId != null && item.PatientId == (int)(ViewBag.patientId))
+                            {
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                            }
+                        </td>
+                    </tr>
+
+                
+              
+            }
+        </tbody>
+    </table>
+
+}

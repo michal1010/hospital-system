@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ClinicApp.Data;
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using static ClinicApp.Models.Parameters;
+using ClinicApp.Models;
 
-namespace ClinicApp.Models;
+namespace ClinicApp.Data;
 
 public static class SeedData
 {
@@ -15,7 +14,6 @@ public static class SeedData
     public static async Task Initialize(IServiceProvider serviceProvider)
     {
         Parameters.GetInstance();
-       
 
         var userManager = serviceProvider.GetService<UserManager<AppUser>>();
 
@@ -32,9 +30,9 @@ public static class SeedData
             serviceProvider.GetRequiredService<
                 DbContextOptions<ClinicAppContext>>()))
         {
-            context.Add<Doctor>(doc);
+            context.Add(doc);
         }
-            List<AppUser> users = new List<AppUser>()
+        List<AppUser> users = new List<AppUser>()
         {
             new AppUser
             {
@@ -55,9 +53,9 @@ public static class SeedData
 
         if (!roleManager.Roles.Any())
         {
-            await roleManager.CreateAsync(new IdentityRole(Roles.Director.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Roles.Doctor.ToString()));
-            await roleManager.CreateAsync(new IdentityRole(Roles.Patient.ToString())); ;
+            await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Director.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Doctor.ToString()));
+            await roleManager.CreateAsync(new IdentityRole(Constants.Roles.Pat.ToString())); ;
         }
 
 
@@ -66,11 +64,12 @@ public static class SeedData
 
         if (!userManager.Users.Any())
         {
-            foreach (var user in users) { 
-            
+            foreach (var user in users)
+            {
+
                 await userManager.CreateAsync(user, "P@ssword1");
             }
-            await userManager.AddToRoleAsync(users[0], Roles.Director.ToString());
+            await userManager.AddToRoleAsync(users[0], Constants.Roles.Director.ToString());
 
         }
 

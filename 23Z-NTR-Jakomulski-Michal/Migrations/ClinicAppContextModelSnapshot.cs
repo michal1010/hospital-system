@@ -109,6 +109,35 @@ namespace ClinicApp.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("ClinicApp.Models.Appointment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PatientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DoctorId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("Appointment");
+                });
+
             modelBuilder.Entity("ClinicApp.Models.Doctor", b =>
                 {
                     b.Property<int>("Id")
@@ -145,7 +174,7 @@ namespace ClinicApp.Migrations
                     b.ToTable("Doctor");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
+            modelBuilder.Entity("ClinicApp.Models.Pat", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,60 +204,7 @@ namespace ClinicApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patient");
-                });
-
-            modelBuilder.Entity("ClinicApp.Models.Shift", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.ToTable("Shift");
-                });
-
-            modelBuilder.Entity("ClinicApp.Models.Visit", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("DoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("PatientId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("Visit");
+                    b.ToTable("Pat");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -370,39 +346,30 @@ namespace ClinicApp.Migrations
                         .WithOne("AppUser")
                         .HasForeignKey("ClinicApp.Models.AppUser", "DoctorId");
 
-                    b.HasOne("ClinicApp.Models.Patient", "Patient")
+                    b.HasOne("ClinicApp.Models.Pat", "Pat")
                         .WithOne("AppUser")
                         .HasForeignKey("ClinicApp.Models.AppUser", "PatientId");
 
                     b.Navigation("Doctor");
 
-                    b.Navigation("Patient");
+                    b.Navigation("Pat");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Shift", b =>
+            modelBuilder.Entity("ClinicApp.Models.Appointment", b =>
                 {
                     b.HasOne("ClinicApp.Models.Doctor", "Doctor")
-                        .WithMany()
+                        .WithMany("Appointments")
                         .HasForeignKey("DoctorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Doctor");
-                });
-
-            modelBuilder.Entity("ClinicApp.Models.Visit", b =>
-                {
-                    b.HasOne("ClinicApp.Models.Doctor", "doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId");
-
-                    b.HasOne("ClinicApp.Models.Patient", "Patient")
-                        .WithMany()
+                    b.HasOne("ClinicApp.Models.Pat", "Pat")
+                        .WithMany("Appointemts")
                         .HasForeignKey("PatientId");
 
-                    b.Navigation("Patient");
+                    b.Navigation("Doctor");
 
-                    b.Navigation("doctor");
+                    b.Navigation("Pat");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -459,11 +426,15 @@ namespace ClinicApp.Migrations
             modelBuilder.Entity("ClinicApp.Models.Doctor", b =>
                 {
                     b.Navigation("AppUser");
+
+                    b.Navigation("Appointments");
                 });
 
-            modelBuilder.Entity("ClinicApp.Models.Patient", b =>
+            modelBuilder.Entity("ClinicApp.Models.Pat", b =>
                 {
                     b.Navigation("AppUser");
+
+                    b.Navigation("Appointemts");
                 });
 #pragma warning restore 612, 618
         }
