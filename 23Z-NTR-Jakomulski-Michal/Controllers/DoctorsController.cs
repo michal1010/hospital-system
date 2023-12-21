@@ -42,6 +42,7 @@ namespace ClinicApp.Controllers
             }
 
             var doctor = await _context.Doctor
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (doctor == null)
             {
@@ -111,7 +112,9 @@ namespace ClinicApp.Controllers
                 return NotFound();
             }
 
-            var doctor = await _context.Doctor.FindAsync(id);
+            var doctor = await _context.Doctor
+                           .AsNoTracking()
+                           .FirstOrDefaultAsync(m => m.Id == id);
             _context.Dispose();
             if (doctor == null)
             {
