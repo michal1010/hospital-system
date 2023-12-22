@@ -498,14 +498,14 @@ namespace ClinicApp.Controllers
                 return NotFound();
             }
 
-            var appointment = await _context.Appointment.Include(a => a.Patient).AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+            var appointment = await _context.Appointment.Include(a => a.Patient).FirstOrDefaultAsync(a => a.Id == id);
             if (appointment == null)
             {
                 return NotFound();
             }
             else
             {
-                if ( appointment.PatientId == null)
+                if ( appointment.PatientId != null)
                 {
                     ModelState.AddModelError(string.Empty, "Appointment has already been reserved");
                 }

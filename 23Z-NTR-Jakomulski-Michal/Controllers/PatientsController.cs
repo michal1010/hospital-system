@@ -45,6 +45,7 @@ namespace ClinicApp.Controllers
             }
 
             var patient = await _context.Patient
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (patient == null)
             {
@@ -118,7 +119,7 @@ namespace ClinicApp.Controllers
             Patient? concurrencyPatient = patientToUpdate;
             if (await TryUpdateModelAsync<Patient>(patientToUpdate,
                 "",
-                d => d.Name, d => d.Surname, d => d.Email, d => d.Password))
+                d => d.Name, d => d.Surname, d => d.Email))
             {
                 try
                 {
