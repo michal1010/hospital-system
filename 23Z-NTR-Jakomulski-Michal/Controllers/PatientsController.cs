@@ -10,6 +10,7 @@ using ClinicApp.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Numerics;
 using Microsoft.AspNetCore.Authorization;
+using ClinicApp.Migrations;
 
 namespace ClinicApp.Controllers
 {
@@ -98,38 +99,56 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Surname,Email,Password,IsAccountActive")] Patient patient)
+        public async Task<IActionResult> Edit(int id, byte[] rowVersion)
         {
-            if (id != patient.Id)
+
+            var patientToUpdate = await _context.Patient.FirstOrDefaultAsync(d => d.Id == id);
+
+            if (patientToUpdate == null)
             {
-                return NotFound();
+                Patient deletedPatient = new Patient();
+                await TryUpdateModelAsync(deletedPatient);
+                ModelState.AddModelError(string.Empty,
+                    "Unable to save changes. The department was deleted by another user.");
+                return View(deletedPatient);
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(patientToUpdate).Property("RowVersion").OriginalValue = rowVersion;
+            Patient? concurrencyPatient = patientToUpdate;
+            if (await TryUpdateModelAsync<Patient>(patientToUpdate,
+                "",
+                d => d.Name, d => d.Surname, d => d.Email, d => d.Password))
             {
                 try
                 {
                     var user = await _context.Users.FirstOrDefaultAsync<AppUser>(m => m.PatientId == id);
 
-                    _context.Update(patient);
                     await _context.SaveChangesAsync();
-                    await _userManager.UpdateAsync(UserFromPatientUpdate(patient, user));
-
+                    await _userManager.UpdateAsync(UserFromPatientUpdate(patientToUpdate, user));
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
-                    if (!PatientExists(patient.Id))
+                    var exceptionEntry = ex.Entries.Single();
+                    var clientValues = (Patient)exceptionEntry.Entity;
+                    var databaseEntry = exceptionEntry.GetDatabaseValues();
+                    if (databaseEntry == null)
                     {
-                        return NotFound();
+                        ModelState.AddModelError(string.Empty,
+                            "Unable to save changes. The department was deleted by another user.");
                     }
                     else
                     {
-                        throw;
+                        concurrencyPatient = (Patient)databaseEntry.ToObject();
+                        ModelState.AddModelError(string.Empty, "Data has been changed during your action. The newest version of data has been uploaded");
+                        patientToUpdate.RowVersion = (byte[])concurrencyPatient.RowVersion;
+                        ModelState.Remove("RowVersion");
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(patient);
+
+            return View(concurrencyPatient);
+           
         }
 
         // GET: Patients/Delete/5

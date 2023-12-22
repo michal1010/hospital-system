@@ -30,5 +30,8 @@ namespace ClinicApp.Models
 
         public ICollection<Appointment>? Appointemts { get; set; }
 
+        [Timestamp]
+        public byte[]? RowVersion { get; set; }
+
     }
 }
