@@ -210,7 +210,7 @@ namespace ClinicApp.Controllers
                         ModelState.AddModelError(string.Empty, "Data has been changed during your action. The newest version of data has been uploaded");
                         appointmentToUpdate.RowVersion = (byte[])concurrencyappointment.RowVersion;
                         ModelState.Remove("RowVersion");
-                        ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "Email", Appointment.DoctorId);
+                        ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "Email", appointmentToUpdate.DoctorId);
 
                     }
                 }
@@ -473,7 +473,7 @@ namespace ClinicApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(int? id)
+        public async Task<IActionResult> SignUp(int? id, bool? concurrencyError)
         {
             if (id == null || _context.Appointment == null)
             {
@@ -485,12 +485,19 @@ namespace ClinicApp.Controllers
             {
                 return NotFound();
             }
+            if (concurrencyError.GetValueOrDefault())
+            {
+                ModelState.AddModelError(string.Empty, "Appointemnt has been already reserved");
+            }
+            else
+            {
+                AppUser? user = await _userManager.GetUserAsync(User);
 
-            AppUser? user = await _userManager.GetUserAsync(User);
-
-            int? patientId = user.PatientId;
-            appointment.PatientId = patientId;
-            await _context.SaveChangesAsync();
+                int? patientId = user.PatientId;
+                appointment.PatientId = patientId;
+                await _context.SaveChangesAsync();
+            }
+            
 
             return RedirectToAction(nameof(AppointmentsListPatient));
         }
