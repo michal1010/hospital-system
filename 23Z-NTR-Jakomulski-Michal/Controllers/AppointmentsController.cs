@@ -13,6 +13,7 @@ using System.Numerics;
 using Microsoft.AspNetCore.Identity;
 using static ClinicApp.Models.Doctor;
 using Microsoft.CodeAnalysis;
+using iText.Kernel.Geom;
 
 namespace ClinicApp.Controllers
 {
@@ -220,41 +221,58 @@ namespace ClinicApp.Controllers
         }
 
         // GET: Appointments/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? concurrencyError)
         {
             if (id == null || _context.Appointment == null)
             {
                 return NotFound();
             }
 
-            var Appointment = await _context.Appointment
-                .Include(s => s.Doctor)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (Appointment == null)
+            var appointment = await _context.Appointment
+               .Include(s => s.Doctor)
+               .FirstOrDefaultAsync(m => m.Id == id);
+            if (appointment == null)
             {
+                if (concurrencyError.GetValueOrDefault())
+                {
+                    return RedirectToAction(nameof(Index));
+                }
                 return NotFound();
             }
-
-            return View(Appointment);
+            if (concurrencyError.GetValueOrDefault())
+            {
+                ViewData["ConcurrencyErrorMessage"] = "The record you attempted to delete "
+                    + "was modified by another user after you got the original values. "
+                    + "The delete operation was canceled and the current values in the "
+                    + "database have been displayed. If you still want to delete this "
+                    + "record, click the Delete button again. Otherwise "
+                    + "click the Back to List hyperlink.";
+            }
+            return View(appointment);
         }
 
         // POST: Appointments/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(Appointment app)
         {
-            if (_context.Appointment == null)
-            {
-                return Problem("Entity set 'ClinicAppContext.Appointment'  is null.");
-            }
-            var Appointment = await _context.Appointment.FindAsync(id);
-            if (Appointment != null)
-            {
-                _context.Appointment.Remove(Appointment);
-            }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                if (await _context.Appointment.AnyAsync(m => m.Id == app.Id))
+                {
+                  
+
+                    _context.Appointment.Remove(app);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction(nameof(Delete), new { concurrencyError = true, id = app.Id });
+            }
         }
 
         private bool AppointmentExists(int id)

@@ -238,26 +238,7 @@ namespace ClinicApp.Controllers
                 //Log the error (uncomment ex variable name and write a log.)
                 return RedirectToAction(nameof(Delete), new { concurrencyError = true, id = doctor.Id});
             }
-            //if (_context.Doctor == null)
-            //{
-            //    return Problem("Entity set 'ClinicAppContext.Doctor'  is null.");
-            //}
-            //var doctor = await _context.Doctor.FindAsync(id);
-            //var user = await _userManager.FindByEmailAsync(doctor.Email);
-            //if (doctor != null && user != null)
-            //{
-            //    _context.Doctor.Remove(doctor);
-            //    await _userManager.DeleteAsync(user);
-            //    await _context.SaveChangesAsync();
-            //}
-            //else
-            //{
-            //    ModelState.AddModelError(string.Empty, "Patient has been already deleted.");
-            //}
-
-
-
-            return RedirectToAction(nameof(Index));
+            
         }
 
 

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Numerics;
 using Microsoft.AspNetCore.Authorization;
 using ClinicApp.Migrations;
+using iText.Kernel.Geom;
 
 namespace ClinicApp.Controllers
 {
@@ -152,7 +153,7 @@ namespace ClinicApp.Controllers
         }
 
         // GET: Patients/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? concurrencyError)
         {
             if (id == null || _context.Patient == null)
             {
@@ -160,35 +161,53 @@ namespace ClinicApp.Controllers
             }
 
             var patient = await _context.Patient
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .AsNoTracking()
+                 .FirstOrDefaultAsync(m => m.Id == id);
             if (patient == null)
             {
+                if (concurrencyError.GetValueOrDefault())
+                {
+                    return RedirectToAction(nameof(Index));
+                }
                 return NotFound();
             }
-
+            if (concurrencyError.GetValueOrDefault())
+            {
+                ViewData["ConcurrencyErrorMessage"] = "The record you attempted to delete "
+                    + "was modified by another user after you got the original values. "
+                    + "The delete operation was canceled and the current values in the "
+                    + "database have been displayed. If you still want to delete this "
+                    + "record, click the Delete button again. Otherwise "
+                    + "click the Back to List hyperlink.";
+            }
             return View(patient);
         }
 
         // POST: Patients/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(Patient patient)
         {
-            if (_context.Patient == null)
-            {
-                return Problem("Entity set 'ClinicAppContext.Pat'  is null.");
-            }
-            var patient = await _context.Patient.FindAsync(id);
-            var user = await _userManager.FindByEmailAsync(patient.Email);
 
-            if (patient != null && user != null)
+            try
             {
-                _context.Patient.Remove(patient);
-                await _userManager.DeleteAsync(user);
-            }
+                if (await _context.Patient.AnyAsync(m => m.Id == patient.Id))
+                {
+                    var user = await _userManager.FindByEmailAsync(patient.Email);
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                    _context.Patient.Remove(patient);
+                    await _context.SaveChangesAsync();
+
+                    await _userManager.DeleteAsync(user);
+
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction(nameof(Delete), new { concurrencyError = true, id = patient.Id });
+            }
         }
 
         private bool PatientExists(int id)
