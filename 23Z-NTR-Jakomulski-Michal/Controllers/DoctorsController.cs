@@ -63,7 +63,7 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Surname, Sepcialization,Email,Password")] Doctor doctor)
+        public async Task<IActionResult> Create([Bind("Name,Surname,Sepcialization,Email,Password")] Doctor doctor)
         {
             if (ModelState.IsValid)
             {
@@ -181,7 +181,7 @@ namespace ClinicApp.Controllers
         }
 
         // GET: Doctors/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, bool? concurrencyError)
         {
             if (id == null || _context.Doctor == null)
             {
@@ -189,33 +189,72 @@ namespace ClinicApp.Controllers
             }
 
             var doctor = await _context.Doctor
+                .AsNoTracking()
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (doctor == null)
             {
+                if (concurrencyError.GetValueOrDefault())
+                {
+                    return RedirectToAction(nameof(Index));
+                }
                 return NotFound();
             }
-
+            if (concurrencyError.GetValueOrDefault())
+            {
+                ViewData["ConcurrencyErrorMessage"] = "The record you attempted to delete "
+                    + "was modified by another user after you got the original values. "
+                    + "The delete operation was canceled and the current values in the "
+                    + "database have been displayed. If you still want to delete this "
+                    + "record, click the Delete button again. Otherwise "
+                    + "click the Back to List hyperlink.";
+            }
             return View(doctor);
         }
 
         // POST: Doctors/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(Doctor doctor)
         {
-            if (_context.Doctor == null)
-            {
-                return Problem("Entity set 'ClinicAppContext.Doctor'  is null.");
-            }
-            var doctor = await _context.Doctor.FindAsync(id);
-            var user = await _userManager.FindByEmailAsync(doctor.Email);
-            if (doctor != null && user != null)
-            {
-                _context.Doctor.Remove(doctor);
-                await _userManager.DeleteAsync(user);
-            }
+         
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                if (await _context.Doctor.AnyAsync(m => m.Id == doctor.Id))
+                {
+                    var doc = await _context.Doctor.FirstOrDefaultAsync(m => m.Id == doctor.Id);
+
+                    var user = await _userManager.FindByEmailAsync(doc.Email);
+                    _context.Doctor.Remove(doc);
+                    await _userManager.DeleteAsync(user);
+                    await _context.SaveChangesAsync();
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateConcurrencyException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.)
+                return RedirectToAction(nameof(Delete), new { concurrencyError = true, id = doctor.Id});
+            }
+            //if (_context.Doctor == null)
+            //{
+            //    return Problem("Entity set 'ClinicAppContext.Doctor'  is null.");
+            //}
+            //var doctor = await _context.Doctor.FindAsync(id);
+            //var user = await _userManager.FindByEmailAsync(doctor.Email);
+            //if (doctor != null && user != null)
+            //{
+            //    _context.Doctor.Remove(doctor);
+            //    await _userManager.DeleteAsync(user);
+            //    await _context.SaveChangesAsync();
+            //}
+            //else
+            //{
+            //    ModelState.AddModelError(string.Empty, "Patient has been already deleted.");
+            //}
+
+
+
             return RedirectToAction(nameof(Index));
         }
 

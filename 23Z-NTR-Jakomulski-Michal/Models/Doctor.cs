@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.CompilerServices;
 
 namespace ClinicApp.Models
 {
@@ -43,7 +45,7 @@ namespace ClinicApp.Models
         public ICollection<Appointment>? Appointments { get; set; }
 
         [Timestamp]
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
 
         public override string ToString()
         {
