@@ -195,7 +195,11 @@ namespace ClinicApp.Controllers
                 if (await _context.Patient.AnyAsync(m => m.Id == patient.Id))
                 {
                     var user = await _userManager.FindByEmailAsync(patient.Email);
-
+                    var appointments = await _context.Appointment.Where(m => m.PatientId == patient.Id).ToListAsync();
+                    foreach( var appointment in appointments)
+                    {
+                        appointment.PatientId = null;
+                    }
                     _context.Patient.Remove(patient);
                     await _context.SaveChangesAsync();
 

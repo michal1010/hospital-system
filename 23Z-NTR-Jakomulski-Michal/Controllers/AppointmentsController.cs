@@ -84,7 +84,7 @@ namespace ClinicApp.Controllers
             PrepareViemVariables();
             var clinicAppContext = _context.Appointment.Include(s => s.Doctor);
             await PrepareViewBag();
-            List<Appointment> appointments = await clinicAppContext.ToListAsync();
+            List<Appointment> appointments = await clinicAppContext.AsNoTracking().ToListAsync();
             TempData["Specialization"] = Specialization;
             var user = await _userManager.GetUserAsync(User);
             appointments = appointments.Where(a => a.PatientId == null || a.PatientId == user.PatientId).ToList();
@@ -111,7 +111,9 @@ namespace ClinicApp.Controllers
             }
 
             var Appointment = await _context.Appointment
+                .AsNoTracking()
                 .Include(s => s.Doctor)
+                .Include(s => s.Patient)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (Appointment == null)
             {
@@ -255,8 +257,7 @@ namespace ClinicApp.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Appointment app)
-        {
-
+        { 
             try
             {
                 if (await _context.Appointment.AnyAsync(m => m.Id == app.Id))
