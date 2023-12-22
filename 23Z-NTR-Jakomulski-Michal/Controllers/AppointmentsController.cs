@@ -473,29 +473,33 @@ namespace ClinicApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SignUp(int? id, bool? concurrencyError)
+        public async Task<IActionResult> SignUp(int? id)
         {
             if (id == null || _context.Appointment == null)
             {
                 return NotFound();
             }
 
-            var appointment = await _context.Appointment.FindAsync(id);
+            var appointment = await _context.Appointment.Include(a => a.Patient).AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
             if (appointment == null)
             {
                 return NotFound();
             }
-            if (concurrencyError.GetValueOrDefault())
-            {
-                ModelState.AddModelError(string.Empty, "Appointemnt has been already reserved");
-            }
             else
             {
-                AppUser? user = await _userManager.GetUserAsync(User);
+                if ( appointment.PatientId == null)
+                {
+                    ModelState.AddModelError(string.Empty, "Appointment has already been reserved");
+                }
+                else
+                {
+                    AppUser? user = await _userManager.GetUserAsync(User);
 
-                int? patientId = user.PatientId;
-                appointment.PatientId = patientId;
-                await _context.SaveChangesAsync();
+                    int? patientId = user.PatientId;
+                    appointment.PatientId = patientId;
+                    await _context.SaveChangesAsync();
+                }
+               
             }
             
 
