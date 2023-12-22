@@ -216,22 +216,24 @@ namespace ClinicApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(Doctor doctor)
         {
-         
+
 
             try
             {
                 if (await _context.Doctor.AnyAsync(m => m.Id == doctor.Id))
                 {
-                    var doc = await _context.Doctor.FirstOrDefaultAsync(m => m.Id == doctor.Id);
+                    //var doctor = await _context.Doctor.FirstOrDefaultAsync(m => m.Id == doctor.Id);
+                    var user = await _userManager.FindByEmailAsync(doctor.Email);
 
-                    var user = await _userManager.FindByEmailAsync(doc.Email);
-                    _context.Doctor.Remove(doc);
-                    await _userManager.DeleteAsync(user);
+                    _context.Doctor.Remove(doctor);
                     await _context.SaveChangesAsync();
+
+                    await _userManager.DeleteAsync(user);
+
                 }
                 return RedirectToAction(nameof(Index));
             }
-            catch (DbUpdateConcurrencyException /* ex */)
+            catch (DbUpdateConcurrencyException ex)
             {
                 //Log the error (uncomment ex variable name and write a log.)
                 return RedirectToAction(nameof(Delete), new { concurrencyError = true, id = doctor.Id});
