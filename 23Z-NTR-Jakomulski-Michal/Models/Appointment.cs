@@ -22,6 +22,9 @@ namespace ClinicApp.Models
         [DisplayFormat(DataFormatString = $"{{0:{Constants.DATE_FORMAT}}}", ApplyFormatInEditMode = true)]
         public DateTime StartTime { get; set; }
 
+        [Timestamp]
+        public byte[]? RowVersion { get; set; }
+
         public override string ToString()
         {
             StringBuilder sb = new StringBuilder();

@@ -168,35 +168,55 @@ namespace ClinicApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,DoctorId,StartTime")] Appointment Appointment)
+        public async Task<IActionResult> Edit(int id, byte[] rowVersion)
         {
-            if (id != Appointment.Id)
+
+
+            var appointmentToUpdate = await _context.Appointment.FirstOrDefaultAsync(d => d.Id == id);
+
+            if (appointmentToUpdate == null)
             {
-                return NotFound();
+                Appointment deletedAppointment = new Appointment();
+                await TryUpdateModelAsync(deletedAppointment);
+                ModelState.AddModelError(string.Empty,
+                    "Unable to save changes. The department was deleted by another user.");
+                return View(deletedAppointment);
             }
 
-            if (ModelState.IsValid)
+            _context.Entry(appointmentToUpdate).Property("RowVersion").OriginalValue = rowVersion;
+            Appointment? concurrencyappointment = appointmentToUpdate;
+            if (await TryUpdateModelAsync<Appointment>(appointmentToUpdate,
+                "",
+                d => d.DoctorId, d => d.StartTime))
             {
                 try
                 {
-                    _context.Update(Appointment);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException ex)
                 {
-                    if (!AppointmentExists(Appointment.Id))
+                    var exceptionEntry = ex.Entries.Single();
+                    var clientValues = (Appointment)exceptionEntry.Entity;
+                    var databaseEntry = exceptionEntry.GetDatabaseValues();
+                    if (databaseEntry == null)
                     {
-                        return NotFound();
+                        ModelState.AddModelError(string.Empty,
+                            "Unable to save changes. The department was deleted by another user.");
                     }
                     else
                     {
-                        throw;
+                        concurrencyappointment = (Appointment)databaseEntry.ToObject();
+                        ModelState.AddModelError(string.Empty, "Data has been changed during your action. The newest version of data has been uploaded");
+                        appointmentToUpdate.RowVersion = (byte[])concurrencyappointment.RowVersion;
+                        ModelState.Remove("RowVersion");
+                        ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "Email", Appointment.DoctorId);
+
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["DoctorId"] = new SelectList(_context.Doctor, "Id", "Email", Appointment.DoctorId);
-            return View(Appointment);
+
+            return View(concurrencyappointment);
         }
 
         // GET: Appointments/Delete/5
