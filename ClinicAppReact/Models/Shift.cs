@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ClinicApp.Data;
+using ClinicAppReact.Data;
 
-namespace ClinicApp.Models
+namespace ClinicAppReact.Models
 {
     public class Shift
     {

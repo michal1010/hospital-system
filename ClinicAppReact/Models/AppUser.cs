@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
-namespace ClinicApp.Models
+namespace ClinicAppReact.Models
 {
     public class AppUser : IdentityUser
     {

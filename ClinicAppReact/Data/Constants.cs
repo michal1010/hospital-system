@@ -1,4 +1,4 @@
-﻿namespace ClinicApp.Data
+﻿namespace ClinicAppReact.Data
 {
     public static class Constants
     {

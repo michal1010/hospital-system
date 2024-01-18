@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace ClinicApp.Models
+namespace ClinicAppReact.Models
 {
     public class Patient
     {

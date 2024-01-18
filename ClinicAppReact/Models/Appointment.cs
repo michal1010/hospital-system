@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
-using ClinicApp.Data;
+using ClinicAppReact.Data;
 
-namespace ClinicApp.Models
+namespace ClinicAppReact.Models
 {
     public class Appointment
     {

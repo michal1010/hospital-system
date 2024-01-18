@@ -1,4 +1,4 @@
-namespace ClinicApp.Models
+namespace ClinicAppReact.Models
 {
     public class ErrorViewModel
     {

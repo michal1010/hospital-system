@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace ClinicApp.Data
+namespace ClinicAppReact.Data
 {
     public record Parameters
     { 

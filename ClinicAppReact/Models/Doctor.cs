@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
 
-namespace ClinicApp.Models
+namespace ClinicAppReact.Models
 {
     public class Doctor
     {

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ClinicApp.Models;
+using ClinicAppReact.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
-namespace ClinicApp.Data
+namespace ClinicAppReact.Data
 {
     public class ClinicAppContext : IdentityDbContext<AppUser>
     {
@@ -15,11 +15,11 @@ namespace ClinicApp.Data
         {
         }
 
-        public DbSet<ClinicApp.Models.Doctor> Doctor { get; set; } = default!;
+        public DbSet<ClinicAppReact.Models.Doctor> Doctor { get; set; } = default!;
 
-        public DbSet<ClinicApp.Models.Patient> Patient { get; set; } = default!;
+        public DbSet<ClinicAppReact.Models.Patient> Patient { get; set; } = default!;
 
-        public DbSet<ClinicApp.Models.Appointment> Appointment { get; set; } = default!;
+        public DbSet<ClinicAppReact.Models.Appointment> Appointment { get; set; } = default!;
 
     }
 }

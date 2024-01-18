@@ -1,5 +1,5 @@
-using ClinicApp.Data;
-using ClinicApp.Models;
+using ClinicAppReact.Data;
+using ClinicAppReact.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 

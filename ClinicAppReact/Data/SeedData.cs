@@ -4,9 +4,9 @@ using System;
 using System.Linq;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using ClinicApp.Models;
+using ClinicAppReact.Models;
 
-namespace ClinicApp.Data;
+namespace ClinicAppReact.Data;
 
 public static class SeedData
 {
