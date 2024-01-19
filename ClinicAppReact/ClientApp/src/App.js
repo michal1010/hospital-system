@@ -11,8 +11,8 @@ const App = () => {
         <Layout>
             <Routes>
                 {AppRoutes.map((route, index) => {
-                    const { element, ...rest } = route;
-                    return <Route key={index} {...rest} element={element} />;
+                    const { element, exact, ...rest } = route;
+                    return <Route key={index} exact={exact} {...rest} element={element} />;
                 })}
             </Routes>
         </Layout>

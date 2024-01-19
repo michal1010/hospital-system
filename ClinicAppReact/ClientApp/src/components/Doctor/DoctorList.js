@@ -1,7 +1,9 @@
-﻿import React, { useState, useEffect } from 'react';
+﻿import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom'
+
 
 const DoctorList = () => {
- 
+
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -30,7 +32,7 @@ const DoctorList = () => {
         };
 
         fetchData();
-        
+
     }, []); // Empty dependency array means this effect runs once after the initial render
     const renderUsersTable = (users) => (
         <table className="table table-striped" aria-labelledby="tableLabel">
@@ -47,7 +49,7 @@ const DoctorList = () => {
             <tbody>
                 {users.map((user) => (
                     <tr key={user.id}>
-                       
+
                         <td>{user.name}</td>
                         <td>{user.surname}</td>
                         <td>{user.email}</td>
@@ -60,9 +62,10 @@ const DoctorList = () => {
     );
     console.log(users)
     return (
+
         <div>
             <h1 id="tableLabel">Doctors</h1>
-            <p>This component demonstrates fetching data from the server.</p>
+            <p><Link to="/doctors/create">Create</Link></p>
             {loading ? <p><em>Loading...</em></p> : renderUsersTable(users)}
         </div>
     );
