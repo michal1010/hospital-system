@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Services.AddDbContext<ClinicAppContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ClinicAppContext") ??
                         throw new InvalidOperationException("Connection string 'ClinicAppContext' not found.")));

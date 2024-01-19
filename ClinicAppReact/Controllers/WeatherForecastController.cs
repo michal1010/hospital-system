@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ClinicAppReact.Data;
+using ClinicAppReact.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClinicAppReact.Controllers
 {
@@ -12,15 +15,18 @@ namespace ClinicAppReact.Controllers
     };
 
         private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        private readonly ClinicAppContext _context;
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, ClinicAppContext clinicApp)
         {
+            _context = clinicApp;
             _logger = logger;
         }
 
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            IEnumerable<Doctor> doctors =  _context.Doctor.ToList();
+
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
