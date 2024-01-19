@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ClinicAppReact.Data;
 using ClinicAppReact.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ClinicAppReact.Controllers
 {
@@ -15,11 +16,13 @@ namespace ClinicAppReact.Controllers
     public class DoctorsController : ControllerBase
     {
         private readonly ClinicAppContext _context;
+        private readonly UserManager<AppUser> _userManager;
 
 
-        public DoctorsController(ClinicAppContext context)
+        public DoctorsController(ClinicAppContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: api/Doctors
@@ -34,6 +37,46 @@ namespace ClinicAppReact.Controllers
             return Ok(doctors);
         }
 
+        // POST: api/Doctors
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPost]
+        public async Task<ActionResult<Doctor>> PostDoctor(Doctor doctor)//string name, string sur, string spec, string mail, string pass)
+        {
+            if (_context.Doctor == null)
+            {
+                return Problem("Entity set 'ClinicAppContext.Doctor'  is null.");
+            }
+            //Doctor doctor = new Doctor
+            //{
+            //    Name = name,
+            //    Surname = sur,
+            //    Sepcialization = Doctor.Sepecializations.Internal,
+            //    Email = mail,
+            //    Password = pass
+            //};
+            var user = UserFromDoctorCreate(doctor);
+            var result = await _userManager.CreateAsync(user, doctor.Password);
+            await _userManager.AddToRoleAsync(user, Constants.Roles.Doctor.ToString());
+            _context.Doctor.Add(doctor);
+             await _context.SaveChangesAsync();
+           
+
+            return CreatedAtAction("GetDoctor", doctor);
+        }
+
+        private AppUser UserFromDoctorCreate(Doctor doctor)
+        {
+            AppUser au = Activator.CreateInstance<AppUser>();
+
+            au.UserName = doctor.Email;
+            au.Name = doctor.Name;
+            au.Surname = doctor.Surname;
+            au.Email = doctor.Email;
+            au.EmailConfirmed = true;
+            au.PhoneNumberConfirmed = true;
+            au.Doctor = doctor;
+            return au;
+        }
         //    // GET: api/Doctors/5
         //    [HttpGet("{id}")]
         //    public async Task<ActionResult<Doctor>> GetDoctor(int id)
@@ -83,20 +126,7 @@ namespace ClinicAppReact.Controllers
         //        return NoContent();
         //    }
 
-        //    // POST: api/Doctors
-        //    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //    [HttpPost]
-        //    public async Task<ActionResult<Doctor>> PostDoctor(Doctor doctor)
-        //    {
-        //      if (_context.Doctor == null)
-        //      {
-        //          return Problem("Entity set 'ClinicAppContext.Doctor'  is null.");
-        //      }
-        //        _context.Doctor.Add(doctor);
-        //        await _context.SaveChangesAsync();
 
-        //        return CreatedAtAction("GetDoctor", new { id = doctor.Id }, doctor);
-        //    }
 
         //    // DELETE: api/Doctors/5
         //    [HttpDelete("{id}")]

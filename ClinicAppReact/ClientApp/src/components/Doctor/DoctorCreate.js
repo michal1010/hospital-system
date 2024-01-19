@@ -9,20 +9,27 @@ const DoctorCreate = () => {
     const [specialization, setSpecialization] = useState([]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const doctor = { name, surname, email, password, specialization}
-        //setIsPending(true);
-        fetch('/doctors/create', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(doctor)
-        }).then(() => {
-            console.log('new blog added')
-            //setIsPending(false);
-            //history.push('/')
-        })
+    const id = 123;
+    const handleSubmit = async (e) => {
+        try {
+            e.preventDefault();
+            const doctor = { id, name, surname, email, password, specialization }
+            //setIsPending(true);
+            const response = fetch('/api/doctors', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(doctor)
+            }).then(() => {
+                console.log('new blog added')
+                //setIsPending(false);
+                history.push('/')
+            })
+            console.log(response.json())
+        }
+        catch (error) {
+            console.error('Fethc error:' + error.message)
+        }
+      
 
     }
 
@@ -33,8 +40,8 @@ const DoctorCreate = () => {
 
             <h4>Doctor</h4>
             <hr />
-            <div class="row">
-                <div class="col-md-4">
+            <div className="row">
+                <div className="col-md-4">
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
                             <label>Name</label>
@@ -77,7 +84,7 @@ const DoctorCreate = () => {
                             <input
                                 type="text"
                                 value={password}
-                                onChange={(e) => setPassowrd(e.target.value)}
+                                onChange={(e) => setPassword(e.target.value)}
                                 className="form-control"
                             />
                         </div>

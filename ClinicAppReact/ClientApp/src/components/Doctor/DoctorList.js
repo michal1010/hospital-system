@@ -21,7 +21,7 @@ const DoctorList = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                fetch('/api/doctors')
+                await fetch('/api/doctors')
                     .then(res => res.json())
                     .then(d => setUsers(d))
                     .then(() => setLoading(false));
