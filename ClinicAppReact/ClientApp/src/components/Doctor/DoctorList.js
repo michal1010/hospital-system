@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
-
+import Specializations from './Parameters.js'
 
 const DoctorList = () => {
 
@@ -8,15 +8,7 @@ const DoctorList = () => {
     const [loading, setLoading] = useState(true);
 
     // the order is essential
-    const Specializations = [
-        'Internal',
-        'Pediartrics',
-        'Neurology',
-        'Oncology',
-        'Dermatology',
-        'Cariology',
-        'Surgeon'
-    ]
+
 
     useEffect(() => {
         const fetchData = async () => {
