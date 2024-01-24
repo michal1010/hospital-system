@@ -35,18 +35,19 @@ const DoctorList = () => {
                     <th>Surname</th>
                     <th>Email</th>
                     <th>Specialization</th>
+                    <th></th>
 
                 </tr>
             </thead>
             <tbody>
                 {users.map((user) => (
-                    <tr key={user.id}>
+                    <tr  key={user.id}>
 
                         <td>{user.name}</td>
                         <td>{user.surname}</td>
                         <td>{user.email}</td>
                         <td>{Specializations[user.sepcialization]}</td>
-
+                        <td><Link to={`/doctors/update/${user.id}`}>update doctor</Link></td>
                     </tr>
                 ))}
             </tbody>
