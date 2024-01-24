@@ -9,6 +9,8 @@ import PatientCreate from "./components/Patient/PatientCreate"
 import PatientDetails from "./components/Patient/PatientDetails";
 import PatientList from "./components/Patient/PatientList";
 import PatientUpdate from "./components/Patient/PatientUpdate";
+import DoctorListUnauthorized from "./components/Doctor/DoctorListUnauthorized";
+import PatientListUnauthorized from "./components/Patient/PatientListUnauthorized";
 
 const AppRoutes = [
     {
@@ -52,6 +54,14 @@ const AppRoutes = [
     {
         path: '/patients/create',
         element: <PatientCreate />
+    },
+    {
+        path: '/doctors/unauthorized',
+        element: <DoctorListUnauthorized />
+    },
+    {
+        path: '/patients/unauthorized',
+        element: <PatientListUnauthorized />
     },
     {
         path: '/fetch-data',

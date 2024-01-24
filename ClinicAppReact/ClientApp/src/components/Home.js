@@ -8,8 +8,8 @@ const Home = () => {
             <p>Welcome to your new single-page application, built with:</p>
 
                <Link className="btn btn-primary" to="/Director">Director</Link>
-               <Link className="btn btn-success p-2" to="/doctors">Doctor</Link>
-               <Link className="btn btn-info p-2" to="/patients">Patient</Link>
+               <Link className="btn btn-success p-2" to="/doctors/unauthorized">Doctor</Link>
+               <Link className="btn btn-info p-2" to="/patients/unauthorized">Patient</Link>
 
         </div>
     );
