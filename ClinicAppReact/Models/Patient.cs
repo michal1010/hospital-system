@@ -30,8 +30,8 @@ namespace ClinicAppReact.Models
 
         public ICollection<Appointment>? Appointemts { get; set; }
 
-        [Timestamp]
-        public byte[]? RowVersion { get; set; }
+        //[Timestamp]
+        //public byte[]? RowVersion { get; set; }
 
     }
 }

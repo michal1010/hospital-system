@@ -44,8 +44,8 @@ namespace ClinicAppReact.Models
 
         public ICollection<Appointment>? Appointments { get; set; }
 
-        [Timestamp]
-        public byte[]? RowVersion { get; set; }
+        //[Timestamp]
+        //public byte[]? RowVersion { get; set; }
 
         public override string ToString()
         {
