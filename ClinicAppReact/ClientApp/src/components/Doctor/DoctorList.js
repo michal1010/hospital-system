@@ -47,7 +47,9 @@ const DoctorList = () => {
                         <td>{user.surname}</td>
                         <td>{user.email}</td>
                         <td>{Specializations[user.sepcialization]}</td>
-                        <td><Link to={`/doctors/update/${user.id}`}>update doctor</Link></td>
+                        <td><Link to={`/doctors/update/${user.id}`}>Edit</Link></td>
+                        <td><Link to={`/doctors/details/${user.id}`}>Details</Link></td>
+
                     </tr>
                 ))}
             </tbody>

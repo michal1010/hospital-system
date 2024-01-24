@@ -152,6 +152,9 @@ namespace ClinicAppReact.Controllers
             {
                 return NotFound();
             }
+            var user = await _userManager.FindByEmailAsync(doctor.Email);
+
+            await _userManager.DeleteAsync(user);
 
             _context.Doctor.Remove(doctor);
             await _context.SaveChangesAsync();
