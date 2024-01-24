@@ -5,10 +5,10 @@ import FetchData from "./components/FetchData";
 import Home from "./components/Home";
 import DoctorCreate from "./components/Doctor/DoctorCreate"
 import DoctorDetails from "./components/Doctor/DocotrDetails";
-import PatientCreate from "./components/Doctor/DoctorCreate"
-import PatientDetails from "./components/Doctor/DocotrDetails";
-import PatientList from "./components/Doctor/DoctorList";
-import PatientUpdate from "./components/Doctor/DoctorUpdate";
+import PatientCreate from "./components/Patient/PatientCreate"
+import PatientDetails from "./components/Patient/PatientDetails";
+import PatientList from "./components/Patient/PatientList";
+import PatientUpdate from "./components/Patient/PatientUpdate";
 
 const AppRoutes = [
     {
@@ -42,15 +42,15 @@ const AppRoutes = [
         element: <PatientList />
     },
     {
-        path: "/patient/update/:id",
+        path: "/patients/update/:id",
         element: <PatientUpdate/>
     },
     {
-        path: "/patient/details/:id",
+        path: "/patients/details/:id",
         element: <PatientDetails/>
     },
     {
-        path: '/patient/create',
+        path: '/patients/create',
         element: <PatientCreate />
     },
     {

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import Specializations from './Parameters.js'
 import FormDiv from '../FormDiv.js'
 
 
@@ -8,7 +7,6 @@ const PatientUpdate = () => {
 
     const [name, setName] = useState('');
     const [surname, setSurname] = useState('');
-    const [specialization, setSpecialization] = useState(Specializations[0]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isPending, setIsPending] = useState(false);
@@ -20,12 +18,11 @@ const PatientUpdate = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                await fetch(`/api/doctors/${id}`)
+                await fetch(`/api/patients/${id}`)
                     .then(res => res.json())
                     .then(d =>{
                         setName(d.name);
                         setSurname(d.surname);
-                        setSpecialization(d.specialization);
                         setEmail(d.email);
                         setPassword(d.password);
                         }
@@ -45,27 +42,22 @@ const PatientUpdate = () => {
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
-            const doctor = { id, name, surname, email, password, specialization }
+            const patient = { id, name, surname, email, password }
             setIsPending(true);
-            const response = await fetch(`/api/doctors/${id}`, {
+            const response = await fetch(`/api/patients/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(doctor)
+                body: JSON.stringify(patient)
             }).then((response) => {
                 setIsPending(false);
                 console.log(response.json())
-                navigate('/doctors');
+                navigate('/patients');
             })
         }
         catch (error) {
             console.error(error.message)
         }
     }
-
-
-    const handleSelectChange = (event) => {
-        setSpecialization(event.target.value);
-    };
 
     return (
 
@@ -79,29 +71,19 @@ const PatientUpdate = () => {
                     <form onSubmit={handleSubmit}>
                         <FormDiv label='Name' value={name} changeFunction={setName} />
                         <FormDiv label='Surname' value={surname} changeFunction={setSurname} />
-                        <div className="form-group">
-                            <label>Specialization</label>
-                            <select value={specialization} onChange={handleSelectChange}>
-                                {Specializations.map((spec, index) =>
-                                    <option key={index} value={spec}>
-                                        {spec}
-                                    </option>
-                                )}
-                            </select>
-                        </div>
                         <FormDiv label='Email' value={email} changeFunction={setEmail} />
                         <FormDiv label='Password' value={password} type="password" changeFunction={setPassword} />
 
                         <div className="form-group">
                             {!isPending && < input type="submit" value="Submit" className="btn btn-primary" />}
-                            {isPending && <p>Adding doctor to the data base...</p>}
+                            {isPending && <p>Adding patient to the data base...</p>}
                         </div>
                     </form>
                </div>
             </div>
 
             <div>
-                < Link to="/doctors">Back to List</Link>
+                < Link to="/patients">Back to List</Link>
 
 
             </div>
