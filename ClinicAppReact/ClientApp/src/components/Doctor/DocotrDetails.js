@@ -1,33 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import Specializations from './Parameters.js'
-import useFetch from '../useFetch';
+import useFetch from './useFetch.js';
 
 
 const DoctorDetails = () => {
     const { id } = useParams()
-    //const { doctor, error, isPending } = useFetch(`/apki/doctors/${id}`);
     const navigate = useNavigate()
-    const [doctor, setDoctors] = useState([]);
-    const [loading, setLoading] = useState([]);
+    console.log('This is id ' + id)
+    const {data, error} =  useFetch(`/api/doctors/${id}`);
+    const doctor = data;
 
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await fetch(`/api/doctors/${id}`)
-                    .then(res => res.json())
-                    .then(d => setDoctors(d))
-                    .then(() => setLoading(false));
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-
-    }, []); // Empty dependency array means this effect runs once after the initial render
 
     const handleClick = async () => {
         await fetch(`api/doctors/${id}`, {
@@ -44,16 +27,16 @@ const DoctorDetails = () => {
             <div>
                 <h4>Doctor</h4>
                 <hr />
-                {doctor && (
+                {data && (
                         <dl key={doctor.id} className="row">
                             <dt className = "col-sm-2">Name</dt>
-                            <dd className="col-sm-10">{doctor.name}</dd>
+                            <dd className="col-sm-10">{data.name}</dd>
                             <dt className = "col-sm-2">Surname</dt>
-                            <dd className="col-sm-10">{doctor.surname}</dd>
+                            <dd className="col-sm-10">{data.surname}</dd>
                             <dt className = "col-sm-2">Specialization:</dt>
-                            <dd className="col-sm-10">{Specializations[doctor.sepcialization]}</dd>
+                            <dd className="col-sm-10">{Specializations[data.sepcialization]}</dd>
                             <dt className = "col-sm-2">Email</dt>
-                            <dd className="col-sm-10">{doctor.email}</dd>
+                            <dd className="col-sm-10">{data.email}</dd>
                         </dl>
                         )
                 }

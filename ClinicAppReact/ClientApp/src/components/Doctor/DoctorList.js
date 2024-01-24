@@ -1,14 +1,11 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 import Specializations from './Parameters.js'
+import useFetch from './useFetch.js';
 
 const DoctorList = () => {
 
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    // the order is essential
-
+    // const {users, error} = useFetch('/api/doctors');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -61,7 +58,7 @@ const DoctorList = () => {
         <div>
             <h1 id="tableLabel">Doctors</h1>
             <p><Link to="/doctors/create">Create</Link></p>
-            {loading ? <p><em>Loading...</em></p> : renderUsersTable(users)}
+            {error ? <p><em>Error</em></p> : renderUsersTable(users)}
         </div>
     );
 };
