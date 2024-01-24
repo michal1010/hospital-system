@@ -139,30 +139,30 @@ namespace ClinicAppReact.Controllers
 
 
 
-        //    // DELETE: api/Doctors/5
-        //    [HttpDelete("{id}")]
-        //    public async Task<IActionResult> DeleteDoctor(int id)
-        //    {
-        //        if (_context.Doctor == null)
-        //        {
-        //            return NotFound();
-        //        }
-        //        var doctor = await _context.Doctor.FindAsync(id);
-        //        if (doctor == null)
-        //        {
-        //            return NotFound();
-        //        }
+        // DELETE: api/Doctors/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteDoctor(int id)
+        {
+            if (_context.Doctor == null)
+            {
+                return NotFound();
+            }
+            var doctor = await _context.Doctor.FindAsync(id);
+            if (doctor == null)
+            {
+                return NotFound();
+            }
 
-        //        _context.Doctor.Remove(doctor);
-        //        await _context.SaveChangesAsync();
+            _context.Doctor.Remove(doctor);
+            await _context.SaveChangesAsync();
 
-        //        return NoContent();
-        //    }
+            return NoContent();
+        }
 
         private bool DoctorExists(int id)
         {
             return (_context.Doctor?.Any(e => e.Id == id)).GetValueOrDefault();
         }
-        //}
+
     }
 }
