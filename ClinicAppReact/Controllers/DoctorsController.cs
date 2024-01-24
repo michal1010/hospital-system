@@ -46,22 +46,15 @@ namespace ClinicAppReact.Controllers
             {
                 return Problem("Entity set 'ClinicAppContext.Doctor'  is null.");
             }
-            //Doctor doctor = new Doctor
-            //{
-            //    Name = name,
-            //    Surname = sur,
-            //    Sepcialization = Doctor.Sepecializations.Internal,
-            //    Email = mail,
-            //    Password = pass
-            //};
+
+            _context.Doctor.Add(doctor);
+            await _context.SaveChangesAsync();
             var user = UserFromDoctorCreate(doctor);
             var result = await _userManager.CreateAsync(user, doctor.Password);
             await _userManager.AddToRoleAsync(user, Constants.Roles.Doctor.ToString());
-            _context.Doctor.Add(doctor);
-             await _context.SaveChangesAsync();
            
 
-            return CreatedAtAction("GetDoctor", doctor);
+            return CreatedAtAction("GetDoctor", new { id = doctor.Id }, doctor);
         }
 
         private AppUser UserFromDoctorCreate(Doctor doctor)
@@ -77,54 +70,72 @@ namespace ClinicAppReact.Controllers
             au.Doctor = doctor;
             return au;
         }
+
+        private AppUser UserFromDoctorUpdate(Doctor doctor, AppUser user)
+        {
+
+            user.UserName = doctor.Email;
+            user.Name = doctor.Name;
+            user.Surname = doctor.Surname;
+            user.Email = doctor.Email;
+            user.EmailConfirmed = true;
+            user.PhoneNumberConfirmed = true;
+            user.Doctor = doctor;
+            return user;
+        }
+
         //    // GET: api/Doctors/5
-        //    [HttpGet("{id}")]
-        //    public async Task<ActionResult<Doctor>> GetDoctor(int id)
-        //    {
-        //      if (_context.Doctor == null)
-        //      {
-        //          return NotFound();
-        //      }
-        //        var doctor = await _context.Doctor.FindAsync(id);
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Doctor>> GetDoctor(int id)
+        {
+            if (_context.Doctor == null)
+            {
+                return NotFound();
+            }
+            var doctor = await _context.Doctor.FindAsync(id);
 
-        //        if (doctor == null)
-        //        {
-        //            return NotFound();
-        //        }
+            if (doctor == null)
+            {
+                return NotFound();
+            }
 
-        //        return doctor;
-        //    }
+            return doctor;
+        }
 
-        //    // PUT: api/Doctors/5
-        //    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //    [HttpPut("{id}")]
-        //    public async Task<IActionResult> PutDoctor(int id, Doctor doctor)
-        //    {
-        //        if (id != doctor.Id)
-        //        {
-        //            return BadRequest();
-        //        }
+        // PUT: api/Doctors/5
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutDoctor(int id, Doctor doctor)
+        {
+            if (id != doctor.Id)
+            {
+                return BadRequest();
+            }
 
-        //        _context.Entry(doctor).State = EntityState.Modified;
 
-        //        try
-        //        {
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!DoctorExists(id))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
+            _context.Entry(doctor).State = EntityState.Modified;
+            var user = await _context.Users.FirstOrDefaultAsync<AppUser>(m => m.DoctorId == id);
 
-        //        return NoContent();
-        //    }
+
+            try
+            {
+                await _userManager.UpdateAsync(UserFromDoctorUpdate(doctor, user));
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!DoctorExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
 
 
 
@@ -148,10 +159,10 @@ namespace ClinicAppReact.Controllers
         //        return NoContent();
         //    }
 
-        //    private bool DoctorExists(int id)
-        //    {
-        //        return (_context.Doctor?.Any(e => e.Id == id)).GetValueOrDefault();
-        //    }
+        private bool DoctorExists(int id)
+        {
+            return (_context.Doctor?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
         //}
     }
 }
