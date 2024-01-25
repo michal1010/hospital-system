@@ -40,7 +40,13 @@ const AppointmentDetails = () => {
 
 
 
-
+    const handleClick = async () => {
+        await fetch(`api/appointments/${id}`, {
+            method: 'DELETE',
+        }).then(() => {
+            navigate('/appointments');
+        })
+    }
     const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour12: false, hour: 'numeric', minute: 'numeric' };
 
     return (
@@ -67,7 +73,9 @@ const AppointmentDetails = () => {
                         )
                 }
             </div>
-
+            <div>
+                <button className="btn btn-danger " onClick={handleClick}>Delete</button>
+            </div>
             <div>
                 <button className="btn btn-primary my-2" onClick={() => navigate('/appointments')}>Back</button>
             </div>
