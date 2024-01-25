@@ -12,6 +12,9 @@ import PatientUpdate from "./components/Patient/PatientUpdate";
 import DoctorListUnauthorized from "./components/Doctor/DoctorListUnauthorized";
 import PatientListUnauthorized from "./components/Patient/PatientListUnauthorized";
 import DirectorMenu from "./components/Director/DirectorMenu";
+import AppointmentList from "./components/Appointment/AppointmentList";
+import AppointmentCreate from "./components/Appointment/AppointmentCreate";
+
 
 const AppRoutes = [
     {
@@ -67,6 +70,14 @@ const AppRoutes = [
     {
         path: '/director',
         element: <DirectorMenu />
+    },
+    {
+        path: '/appointments',
+        element: <AppointmentList />
+    },
+    {
+        path: '/appointments/create',
+        element: <AppointmentCreate />
     },
     {
         path: '/fetch-data',

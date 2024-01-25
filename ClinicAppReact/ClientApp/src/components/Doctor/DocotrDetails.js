@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import Specializations from './Parameters.js'
+import Specializations from '../Parameters.js'
 import useFetch from './useFetch.js';
 
 

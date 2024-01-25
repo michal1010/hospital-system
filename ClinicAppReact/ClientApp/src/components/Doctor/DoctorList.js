@@ -1,6 +1,6 @@
 ﻿import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
-import Specializations from './Parameters.js'
+import Specializations from '../Parameters.js'
 
 
 const DoctorList = () => {
