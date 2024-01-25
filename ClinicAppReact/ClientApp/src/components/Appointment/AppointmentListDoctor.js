@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import Specializations from '../Parameters.js'
 
 
-const AppointmentList = () => {
+const AppointmentListDoctor = () => {
 
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -67,7 +67,7 @@ const AppointmentList = () => {
                                     <td>{new Date(user.startTime).toLocaleString('en-UK', options)}</td>
                                     <td>{Specializations[user.doctor.specialization]}</td>
                                     {/* <td><Link to={`/appointments/update/${user.id}`}>Edit</Link></td> */}
-                                    <td><Link to={`/appointments/details/${user.id}`}>Details</Link></td>
+                                    <td><Link to={`/appointments/details/safe/${user.id}`}>Details</Link></td>
 
                                 </tr>
                             );
@@ -126,4 +126,4 @@ const AppointmentList = () => {
 };
 
 
-export default AppointmentList;
+export default AppointmentListDoctor;

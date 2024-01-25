@@ -16,6 +16,8 @@ import AppointmentList from "./components/Appointment/AppointmentList";
 import AppointmentCreate from "./components/Appointment/AppointmentCreate";
 import AppointmentUpdate from "./components/Appointment/AppointmentUpdate";
 import AppointmentDetails from "./components/Appointment/AppointmentDetails";
+import AppointmentListDoctor from "./components/Appointment/AppointmentListDoctor";
+import AppointmentDetailsSafe from "./components/Appointment/AppointmentDetailsSafe";
 
 
 
@@ -89,6 +91,14 @@ const AppRoutes = [
     {
         path: '/appointments/details/:id',
         element: <AppointmentDetails />
+    },
+    {
+        path: '/appointments/doctor',
+        element: <AppointmentListDoctor />
+    },
+    {
+        path: '/appointments/details/safe/:id',
+        element: <AppointmentDetailsSafe />
     },
     {
         path: '/fetch-data',
