@@ -39,7 +39,7 @@ namespace ClinicAppReact.Controllers
                                                                           Id = app.Doctor.Id,
                                                                           Name = app.Doctor.Name,
                                                                           Surname = app.Doctor.Surname,
-                                                                          Sepcialization = app.Doctor.Sepcialization
+                                                                          Specialization = app.Doctor.Sepcialization
                                                                       },
                                                                       StartTime = app.StartTime
                                                                   }).ToArrayAsync();
@@ -54,14 +54,29 @@ namespace ClinicAppReact.Controllers
           {
               return NotFound();
           }
-            var appointment = await _context.Appointment.FindAsync(id);
+            AppointmentDTO? appointment = await _context.Appointment.Include(app => app.Doctor)
+                                                                  .Where(app => app.Id == id)
+                                                                  .Select(app => new AppointmentDTO
+                                                                  {
+                                                                      Id = app.Id,
+                                                                      Doctor = new DoctorDTO
+                                                                      {
+                                                                          Id = app.Doctor.Id,
+                                                                          Name = app.Doctor.Name,
+                                                                          Surname = app.Doctor.Surname,
+                                                                          Specialization = app.Doctor.Sepcialization
+                                                                      },
+                                                                      StartTime = app.StartTime,
+                                                                      Description = app.Description
+                                                                  }).FirstOrDefaultAsync();
+                                                                 
 
             if (appointment == null)
             {
                 return NotFound();
             }
 
-            return appointment;
+            return Ok(appointment);
         }
 
         // PUT: api/Appointments/5

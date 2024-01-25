@@ -64,7 +64,6 @@ const AppointmentCreate = () => {
 
     const handleSelectChange = (event) => {
         setId(event.target.value)
-        console.log(id)
     };
 
     const handleSetStartTime = (event) => {
@@ -103,20 +102,8 @@ const AppointmentCreate = () => {
                                 )}
                             </select>
                         </div>
-                        {/*<div className="mt-2">*/}
-                        {/*<DateTimePicker ampm={false} views={['day', 'month', 'year', 'hours', 'minutes']}*/}
-                        {/*label="Start Time" onChange={setStartTime}/>*/}
-                        {/*</div>*/}
-                        {/*<div className="mt-2">*/}
-                        {/*<DateTimePicker ampm={false} views={['day', 'month', 'year', 'hours', 'minutes']}*/}
-                        {/*label="End Time" onChange={setEndTime}/>*/}
-                        {/*</div>*/}
-
-
-
                         <FormDiv type="datetime-local" label='Start Time' value={startTime} changeFunction={setStartTime} />
                         <FormDiv  type="datetime-local" label='End Time' value={endTime} changeFunction={setEndTime} />
-
                         <div className="form-group">
                             {!isPending && < input type="submit" value="Create" className="btn btn-primary" />}
                             {isPending && <p>Adding doctor to the data base...</p>}

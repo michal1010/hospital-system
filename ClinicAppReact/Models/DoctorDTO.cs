@@ -14,7 +14,7 @@ namespace ClinicAppReact.Models
         public string? Surname { get; set; }
 
         [Required]
-        public Sepecializations Sepcialization { get; set; }
+        public Sepecializations Specialization { get; set; }
 
         [EmailAddress]
         [Display(Name = "Email")]

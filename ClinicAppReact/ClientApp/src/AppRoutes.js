@@ -14,6 +14,9 @@ import PatientListUnauthorized from "./components/Patient/PatientListUnauthorize
 import DirectorMenu from "./components/Director/DirectorMenu";
 import AppointmentList from "./components/Appointment/AppointmentList";
 import AppointmentCreate from "./components/Appointment/AppointmentCreate";
+import AppointmentUpdate from "./components/Appointment/AppointmentUpdate";
+import AppointmentDetails from "./components/Appointment/AppointmentDetails";
+
 
 
 const AppRoutes = [
@@ -78,6 +81,14 @@ const AppRoutes = [
     {
         path: '/appointments/create',
         element: <AppointmentCreate />
+    },
+    {
+        path: '/appointments/update/:id',
+        element: <AppointmentUpdate />
+    },
+    {
+        path: '/appointments/details/:id',
+        element: <AppointmentDetails />
     },
     {
         path: '/fetch-data',
