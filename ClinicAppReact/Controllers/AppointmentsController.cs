@@ -102,29 +102,6 @@ namespace ClinicAppReact.Controllers
             await _context.SaveChangesAsync();
         }
 
-        private DateTime convertDate(string  dateString)
-        {
-            //string dateString = "2024-01-25T15:25";
-
-            // Specify the format of the input string
-            string format = "yyyy-MM-ddTHH:mm";
-
-            // Parse the string into a DateTime object
-            DateTime dateTime;
-            if (DateTime.TryParseExact(dateString, format,
-                System.Globalization.CultureInfo.InvariantCulture,
-                System.Globalization.DateTimeStyles.None, out dateTime))
-            {
-                // Now you can work with the parsed DateTime object
-                return dateTime;
-            }
-            else
-            {
-                return DateTime.MinValue;
-            }
-
-        }
-
         // POST: api/Appointments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
