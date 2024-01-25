@@ -5,6 +5,7 @@ namespace ClinicAppReact.Models
 {
     public class Shift
     {
+        public int Id { get; set; }
         public int DoctorId { get; set; }
 
         [DataType(DataType.DateTime)]
