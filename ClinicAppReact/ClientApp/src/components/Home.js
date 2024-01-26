@@ -9,7 +9,7 @@ const Home = () => {
 
                <Link className="btn btn-primary" to="/director">Director</Link>
                <Link className="btn btn-success p-2" to="/appointments/doctor">Doctor</Link>
-               <Link className="btn btn-info p-2" to="/patients/unauthorized">Patient</Link>
+               <Link className="btn btn-info p-2" to="/appointments/patient">Patient</Link>
 
         </div>
     );

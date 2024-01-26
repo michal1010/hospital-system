@@ -18,6 +18,7 @@ import AppointmentUpdate from "./components/Appointment/AppointmentUpdate";
 import AppointmentDetails from "./components/Appointment/AppointmentDetails";
 import AppointmentListDoctor from "./components/Appointment/AppointmentListDoctor";
 import AppointmentDetailsSafe from "./components/Appointment/AppointmentDetailsSafe";
+import AppointmentListPatient from "./components/Appointment/AppointmentListPatient";
 
 
 
@@ -95,6 +96,10 @@ const AppRoutes = [
     {
         path: '/appointments/doctor',
         element: <AppointmentListDoctor />
+    },
+    {
+        path: '/appointments/patient',
+        element: <AppointmentListPatient />
     },
     {
         path: '/appointments/details/safe/:id',

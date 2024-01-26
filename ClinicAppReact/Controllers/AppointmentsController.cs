@@ -41,7 +41,8 @@ namespace ClinicAppReact.Controllers
                                                                           Surname = app.Doctor.Surname,
                                                                           Specialization = app.Doctor.Sepcialization
                                                                       },
-                                                                      StartTime = app.StartTime
+                                                                      StartTime = app.StartTime,
+                                                                      //PatientId = app.PatientId ? app.PatientId : -1
                                                                   }).ToArrayAsync();
             return Ok(appointments);
         }
