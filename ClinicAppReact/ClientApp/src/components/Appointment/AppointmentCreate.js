@@ -50,9 +50,24 @@ const AppointmentCreate = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(shift)
             }).then((response) => {
-                setIsPending(false);
-                console.log(response.json())
+                if (response.ok){
+                    setIsPending(false);
+                    return response
+                }
+                else {
+                    return response.text().then(errorMessage => {
+                        throw new Error(errorMessage)
+                    })
+                    // alert('Invalid time slot. Time slot needs to be divisible by 15.')
+                    // window.location.reload()
+                }
+
+            }).then(data => {
                 navigate('/appointments');
+            }).catch(error => {
+                alert(error.message)
+                window.location.reload()
+
             })
         }
         catch (error) {

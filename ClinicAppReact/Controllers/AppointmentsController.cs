@@ -121,7 +121,7 @@ namespace ClinicAppReact.Controllers
         // POST: api/Appointments
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Shift>> PostShift(Shift shift)
+        public async Task<IActionResult> PostShift(Shift shift)
         {
             //DateTime startTimeD = convertDate(startTime);
             //DateTime endTimeD = convertDate(endTime);
@@ -138,17 +138,23 @@ namespace ClinicAppReact.Controllers
             {
                 return Problem("Entity set 'Shift'  is null.");
             }
-            
-            await CreateAppointments(shift);
-            Doctor? doc = _context.Doctor.Include(d => d.Appointments).FirstOrDefault((d) => d.Id == shift.Id);
-            Appointment? app = doc.Appointments.First();
-            return CreatedAtAction("GetAppointment", new { id = app.Id }, app);
+            try
+            {
+                await CreateAppointments(shift);
+            }
+            catch (ArgumentException e)
+            {
+                return BadRequest(e.Message);
+            }
+            return Ok();
+            //Doctor? doc = _context.Doctor.Include(d => d.Appointments).FirstOrDefault((d) => d.Id == shift.Id);
+            //Appointment? app = doc.Appointments.First();
+            //return CreatedAtAction("GetAppointment", new { id = app.Id }, app);
         }
 
         public async Task CreateAppointments(Shift shift)
         {
-            try
-            {
+           
                 int numberAppointemts = CreateNumberOfAppointments(shift.StartTime, shift.EndTime);
                 DateTime appointemntStart = shift.StartTime;
                 int doctorId = shift.DoctorId;
@@ -163,12 +169,8 @@ namespace ClinicAppReact.Controllers
                     });
                     appointemntStart = appointemntStart.AddMinutes(15);
                 }
-            }
-            catch (ArgumentException exception)
-            {
-
-
-            }
+            
+          
         }
 
         private int CreateNumberOfAppointments(DateTime start, DateTime end)

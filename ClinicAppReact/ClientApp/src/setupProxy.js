@@ -14,6 +14,7 @@ const context = [
     "/api/patient/details/:id",
     "/api/patients/update/:id",
     "/api/appointments",
+    "/api/appointments/:id",
     "/weatherforecast",
 ];
 
