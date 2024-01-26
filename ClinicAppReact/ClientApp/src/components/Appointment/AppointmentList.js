@@ -39,8 +39,8 @@ const AppointmentList = () => {
 
     }, []);
 
-
-    const options = { year: 'numeric', month: '2-digit', day: '2-digit'};
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour12: false, hour: 'numeric', minute: 'numeric' };
+    const optionsRange = { year: 'numeric', month: '2-digit', day: '2-digit'};
     const renderUsersTable = (users) => (
         <table className="table table-striped" aria-labelledby="tableLabel">
 
@@ -115,8 +115,8 @@ const AppointmentList = () => {
             <div>
                 <button onClick={decreaseWeek} className="btn btn-primary m-2">Previous week</button>
                 <button onClick={increaseWeek} className="btn btn-primary m-2">Next week</button>
-                <label className="m-2">{startDate.toLocaleString('en-UK', options)}</label>
-                <label className="m-2">{endDate.toLocaleString('en-UK', options)}</label>
+                <label className="m-2">{startDate.toLocaleString('en-UK', optionsRange)}</label>
+                <label className="m-2">{endDate.toLocaleString('en-UK', optionsRange)}</label>
             </div>
 
 

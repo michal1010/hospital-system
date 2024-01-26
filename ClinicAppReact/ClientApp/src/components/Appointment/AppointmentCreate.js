@@ -58,8 +58,6 @@ const AppointmentCreate = () => {
                     return response.text().then(errorMessage => {
                         throw new Error(errorMessage)
                     })
-                    // alert('Invalid time slot. Time slot needs to be divisible by 15.')
-                    // window.location.reload()
                 }
 
             }).then(data => {
@@ -83,20 +81,14 @@ const AppointmentCreate = () => {
 
     const handleSetStartTime = (event) => {
         const selectedDate = new Date(event.target.value);
-        // const formattedDate = selectedDate.toISOString().slice(0, 16); // Format: "yyyy-MM-ddThh:mm"
 
-        // console.log(formattedDate); // This logs the formatted date
-        setStartTime(selectedDate); // Update state with the formatted date
+        setStartTime(selectedDate);
     };
 
     const handleSetEndTime = (event) => {
         const selectedDate = new Date(event.target.value);
-        // const formattedDate = selectedDate.toISOString().slice(0, 16); // Format: "yyyy-MM-ddThh:mm"
-
-        // console.log(formattedDate); // This logs the formatted date
-        setEndTime(selectedDate); // Update state with the formatted date
-    };
-
+        setEndTime(selectedDate);
+    }
     return (
 
         <div>
